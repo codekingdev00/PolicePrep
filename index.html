@@ -134,36 +134,235 @@
         { id: "civic", name: "Civic & Security", icon: "fa-gavel", topics: ["Citizenship Duties", "Rule of Law", "Human Rights", "Community Policing"] }
     ];
     
-    const QUIZ_BANK = {
-        eng: [
-            { text: "What is the synonym of 'BRAVE'?", options: ["Fearful", "Cowardly", "Courageous", "Weak"], correct: 2 },
-            { text: "Complete: He ___ to school yesterday.", options: ["go", "went", "gone", "going"], correct: 1 },
-            { text: "Which is correct spelling?", options: ["Acommodate", "Accommodate", "Acomodate", "Accomodate"], correct: 1 },
-            { text: "Choose the antonym of 'ANCIENT':", options: ["Old", "Modern", "Aged", "Historic"], correct: 1 },
-            { text: "Identify the error: 'The team are playing well.'", options: ["No error", "Subject-verb agreement", "Tense", "Pronoun"], correct: 1 }
-        ],
-        math: [
-            { text: "25% of 400 equals?", options: ["50", "100", "150", "200"], correct: 1 },
-            { text: "Simplify: (15/3) + 7", options: ["10", "12", "14", "5"], correct: 1 },
-            { text: "If a car travels 120km in 2hrs, average speed?", options: ["60km/h", "70km/h", "80km/h", "50km/h"], correct: 0 },
-            { text: "What is 60% of 250?", options: ["100", "120", "150", "180"], correct: 2 },
-            { text: "If 3:5 = 9:x, find x", options: ["10", "12", "15", "18"], correct: 2 }
-        ],
-        gk: [
-            { text: "Capital of Nigeria is?", options: ["Lagos", "Abuja", "Kano", "Ibadan"], correct: 1 },
-            { text: "Which agency maintains internal security?", options: ["NIA", "NPF", "NAF", "NSCDC"], correct: 1 },
-            { text: "Who was the first military Head of State in Nigeria?", options: ["Aguiyi Ironsi", "Yakubu Gowon", "Murtala Mohammed", "Olusegun Obasanjo"], correct: 0 },
-            { text: "The Nigerian flag was designed by?", options: ["Taiwo Akinkunmi", "Nnamdi Azikiwe", "Herbert Macaulay", "Tafawa Balewa"], correct: 0 },
-            { text: "Which year did Nigeria gain independence?", options: ["1960", "1963", "1970", "1957"], correct: 0 }
-        ],
-        civic: [
-            { text: "Citizenship duty includes:", options: ["Paying tax", "Violating law", "Evading jury", "None"], correct: 0 },
-            { text: "Rule of law means?", options: ["Nobody above law", "Leaders are exempt", "Military rule", "No courts"], correct: 0 },
-            { text: "Which is a fundamental human right?", options: ["Right to life", "Right to bribe", "Right to steal", "Right to hate"], correct: 0 },
-            { text: "Community policing emphasizes:", options: ["Police-community partnership", "Military patrols", "Curfews", "Mass arrest"], correct: 0 },
-            { text: "The Nigerian Police Force motto is?", options: ["Police is your friend", "Service and Security", "Justice for all", "Fear God, Serve Nation"], correct: 0 }
-        ]
-    };
+  const QUIZ_BANK = {
+ eng: [
+  { text: "What is the synonym of 'BRAVE'?", options: ["Fearful", "Cowardly", "Courageous", "Weak"], correct: 2 },
+  { text: "Complete: He ___ to school yesterday.", options: ["go", "went", "gone", "going"], correct: 1 },
+  { text: "Which is correct spelling?", options: ["Acommodate", "Accommodate", "Acomodate", "Accomodate"], correct: 1 },
+  { text: "Choose the antonym of 'ANCIENT':", options: ["Old", "Modern", "Aged", "Historic"], correct: 1 },
+  { text: "Identify the error: 'The team are playing well.'", options: ["No error", "Subject-verb agreement", "Tense", "Pronoun"], correct: 1 },
+
+  { text: "Synonym of 'HAPPY'?", options: ["Sad", "Joyful", "Angry", "Tired"], correct: 1 },
+  { text: "Opposite of 'STRONG'?", options: ["Weak", "Hard", "Firm", "Bold"], correct: 0 },
+  { text: "Fill: She ___ cooking now.", options: ["is", "are", "was", "were"], correct: 0 },
+  { text: "Plural of 'Child'?", options: ["Childs", "Children", "Childes", "Childrens"], correct: 1 },
+  { text: "Correct tense: I ___ him yesterday.", options: ["see", "saw", "seen", "seeing"], correct: 1 },
+
+  { text: "Meaning of 'FAST'?", options: ["Quick", "Slow", "Weak", "Heavy"], correct: 0 },
+  { text: "Opposite of 'LIGHT'?", options: ["Bright", "Dark", "Heavy", "Clear"], correct: 2 },
+  { text: "Choose correct: They ___ gone.", options: ["has", "have", "is", "was"], correct: 1 },
+  { text: "Correct spelling?", options: ["Enviroment", "Environment", "Envirement", "Enviornment"], correct: 1 },
+  { text: "Synonym of 'BIG'?", options: ["Large", "Tiny", "Short", "Thin"], correct: 0 },
+
+  { text: "Opposite of 'EARLY'?", options: ["Late", "Soon", "Quick", "Fast"], correct: 0 },
+  { text: "Fill: He ___ playing football.", options: ["is", "are", "were", "been"], correct: 0 },
+  { text: "Synonym of 'SMART'?", options: ["Dull", "Clever", "Slow", "Lazy"], correct: 1 },
+  { text: "Plural of 'Mouse'?", options: ["Mouses", "Mice", "Mouse", "Meese"], correct: 1 },
+  { text: "Correct spelling?", options: ["Recieve", "Receive", "Receeve", "Receve"], correct: 1 },
+
+  { text: "Opposite of 'HOT'?", options: ["Warm", "Cold", "Cool", "Heat"], correct: 1 },
+  { text: "Synonym of 'QUICK'?", options: ["Slow", "Rapid", "Lazy", "Weak"], correct: 1 },
+  { text: "Fill: They ___ finished their work.", options: ["has", "have", "is", "was"], correct: 1 },
+  { text: "Plural of 'Man'?", options: ["Mans", "Men", "Manes", "Mens"], correct: 1 },
+  { text: "Correct spelling?", options: ["Definately", "Definitely", "Definetly", "Definatly"], correct: 1 },
+
+  { text: "Opposite of 'FULL'?", options: ["Empty", "Half", "Complete", "Filled"], correct: 0 },
+  { text: "Synonym of 'ANGRY'?", options: ["Happy", "Furious", "Calm", "Cool"], correct: 1 },
+  { text: "Fill: She ___ gone already.", options: ["has", "have", "is", "are"], correct: 0 },
+  { text: "Plural of 'Foot'?", options: ["Foots", "Feet", "Feets", "Footes"], correct: 1 },
+  { text: "Correct spelling?", options: ["Occured", "Occurred", "Occuried", "Ocurred"], correct: 1 },
+
+  { text: "Opposite of 'UP'?", options: ["Down", "Top", "Above", "High"], correct: 0 },
+  { text: "Synonym of 'EASY'?", options: ["Hard", "Simple", "Difficult", "Tough"], correct: 1 },
+  { text: "Fill: We ___ going to the market.", options: ["is", "are", "was", "be"], correct: 1 },
+  { text: "Plural of 'Tooth'?", options: ["Tooths", "Teeth", "Toothes", "Toothes"], correct: 1 },
+  { text: "Correct spelling?", options: ["Seperate", "Separate", "Seperete", "Separrate"], correct: 1 },
+
+  { text: "Opposite of 'LONG'?", options: ["Short", "Tall", "High", "Wide"], correct: 0 },
+  { text: "Synonym of 'OLD'?", options: ["Ancient", "Young", "New", "Fresh"], correct: 0 },
+  { text: "Fill: He ___ eaten already.", options: ["has", "have", "is", "was"], correct: 0 },
+  { text: "Plural of 'Woman'?", options: ["Womans", "Women", "Womens", "Womanes"], correct: 1 },
+  { text: "Correct spelling?", options: ["Tommorow", "Tomorrow", "Tomorow", "Tommorrow"], correct: 1 },
+
+  { text: "Opposite of 'GOOD'?", options: ["Bad", "Nice", "Kind", "Fine"], correct: 0 },
+  { text: "Synonym of 'RICH'?", options: ["Poor", "Wealthy", "Hungry", "Needy"], correct: 1 },
+  { text: "Fill: I ___ reading now.", options: ["is", "am", "are", "was"], correct: 1 },
+  { text: "Plural of 'Person'?", options: ["Persons", "People", "Peoples", "Persones"], correct: 1 },
+  { text: "Correct spelling?", options: ["Beutiful", "Beautiful", "Beautifull", "Beautifal"], correct: 1 },
+
+  { text: "Opposite of 'FAST'?", options: ["Quick", "Slow", "Speed", "Rapid"], correct: 1 },
+  { text: "Synonym of 'SMALL'?", options: ["Tiny", "Big", "Large", "Huge"], correct: 0 },
+  { text: "Fill: They ___ watching TV.", options: ["is", "are", "was", "be"], correct: 1 },
+  { text: "Plural of 'Goose'?", options: ["Gooses", "Geese", "Goose", "Geeses"], correct: 1 },
+  { text: "Correct spelling?", options: ["Adress", "Address", "Addres", "Adres"], correct: 1 }
+],
+
+  math: [
+  { text: "25% of 400 equals?", options: ["50", "100", "150", "200"], correct: 1 },
+  { text: "Simplify: (15/3) + 7", options: ["10", "12", "14", "5"], correct: 1 },
+  { text: "If a car travels 120km in 2hrs, average speed?", options: ["60km/h", "70km/h", "80km/h", "50km/h"], correct: 0 },
+  { text: "What is 60% of 250?", options: ["100", "120", "150", "180"], correct: 2 },
+  { text: "If 3:5 = 9:x, find x", options: ["10", "12", "15", "18"], correct: 2 },
+
+  { text: "10% of 500?", options: ["50", "100", "150", "200"], correct: 0 },
+  { text: "5 + 7 × 2?", options: ["24", "19", "17", "26"], correct: 1 },
+  { text: "Square of 9?", options: ["18", "81", "27", "36"], correct: 1 },
+  { text: "Cube of 3?", options: ["9", "6", "27", "18"], correct: 2 },
+  { text: "Half of 90?", options: ["30", "40", "45", "50"], correct: 2 },
+
+  { text: "12 × 8?", options: ["96", "88", "108", "92"], correct: 0 },
+  { text: "100 ÷ 4?", options: ["20", "25", "30", "40"], correct: 1 },
+  { text: "15% of 200?", options: ["20", "25", "30", "35"], correct: 2 },
+  { text: "7²?", options: ["14", "21", "49", "28"], correct: 2 },
+  { text: "√64?", options: ["6", "7", "8", "9"], correct: 2 },
+
+  { text: "20% of 150?", options: ["20", "25", "30", "35"], correct: 2 },
+  { text: "9 × 7?", options: ["56", "63", "72", "49"], correct: 1 },
+  { text: "144 ÷ 12?", options: ["10", "11", "12", "13"], correct: 2 },
+  { text: "6³?", options: ["36", "216", "18", "108"], correct: 1 },
+  { text: "√81?", options: ["7", "8", "9", "6"], correct: 2 },
+
+  { text: "30% of 300?", options: ["60", "90", "120", "150"], correct: 1 },
+  { text: "11 × 11?", options: ["111", "121", "101", "131"], correct: 1 },
+  { text: "200 ÷ 5?", options: ["20", "30", "40", "50"], correct: 2 },
+  { text: "8²?", options: ["16", "32", "64", "48"], correct: 2 },
+  { text: "√100?", options: ["8", "9", "10", "11"], correct: 2 },
+
+  { text: "40% of 500?", options: ["150", "200", "250", "300"], correct: 1 },
+  { text: "13 × 3?", options: ["36", "39", "42", "45"], correct: 1 },
+  { text: "90 ÷ 3?", options: ["20", "25", "30", "35"], correct: 2 },
+  { text: "5²?", options: ["10", "20", "25", "30"], correct: 2 },
+  { text: "√121?", options: ["10", "11", "12", "9"], correct: 1 },
+
+  { text: "50% of 80?", options: ["20", "30", "40", "50"], correct: 2 },
+  { text: "14 × 2?", options: ["26", "28", "30", "32"], correct: 1 },
+  { text: "81 ÷ 9?", options: ["7", "8", "9", "6"], correct: 2 },
+  { text: "4³?", options: ["16", "32", "64", "48"], correct: 2 },
+  { text: "√49?", options: ["6", "7", "8", "9"], correct: 1 },
+
+  { text: "75% of 200?", options: ["100", "125", "150", "175"], correct: 2 },
+  { text: "16 × 2?", options: ["30", "32", "34", "36"], correct: 1 },
+  { text: "72 ÷ 8?", options: ["8", "9", "10", "7"], correct: 1 },
+  { text: "9³?", options: ["81", "243", "162", "324"], correct: 1 },
+  { text: "√36?", options: ["5", "6", "7", "8"], correct: 1 },
+
+  { text: "90% of 100?", options: ["80", "85", "90", "95"], correct: 2 },
+  { text: "18 × 2?", options: ["34", "36", "38", "40"], correct: 1 },
+  { text: "64 ÷ 8?", options: ["6", "7", "8", "9"], correct: 2 },
+  { text: "3²?", options: ["6", "9", "12", "3"], correct: 1 },
+  { text: "√25?", options: ["4", "5", "6", "7"], correct: 1 }
+],
+gk: [
+  { text: "Capital of Nigeria is?", options: ["Lagos", "Abuja", "Kano", "Ibadan"], correct: 1 },
+  { text: "Which agency maintains internal security?", options: ["NIA", "NPF", "NAF", "NSCDC"], correct: 1 },
+  { text: "Who was the first military Head of State in Nigeria?", options: ["Aguiyi Ironsi", "Yakubu Gowon", "Murtala Mohammed", "Olusegun Obasanjo"], correct: 0 },
+  { text: "The Nigerian flag was designed by?", options: ["Taiwo Akinkunmi", "Nnamdi Azikiwe", "Herbert Macaulay", "Tafawa Balewa"], correct: 0 },
+  { text: "Which year did Nigeria gain independence?", options: ["1960", "1963", "1970", "1957"], correct: 0 },
+
+  { text: "Currency of Nigeria?", options: ["Dollar", "Naira", "Pound", "Euro"], correct: 1 },
+  { text: "Largest continent?", options: ["Africa", "Asia", "Europe", "America"], correct: 1 },
+  { text: "World largest ocean?", options: ["Atlantic", "Pacific", "Indian", "Arctic"], correct: 1 },
+  { text: "UN stands for?", options: ["United Nations", "Union Nations", "United Net", "Universal Nations"], correct: 0 },
+  { text: "First man on the moon?", options: ["Neil Armstrong", "Buzz Aldrin", "Yuri Gagarin", "John Glenn"], correct: 0 },
+
+  { text: "Nigeria has how many states?", options: ["36", "35", "37", "38"], correct: 0 },
+  { text: "Who is the current President of Nigeria (2025)?", options: ["Muhammadu Buhari", "Bola Tinubu", "Goodluck Jonathan", "Atiku Abubakar"], correct: 1 },
+  { text: "The Sahara Desert is located in?", options: ["Asia", "Africa", "Australia", "Europe"], correct: 1 },
+  { text: "Which planet is known as the Red Planet?", options: ["Earth", "Mars", "Jupiter", "Venus"], correct: 1 },
+  { text: "Largest country in the world?", options: ["USA", "China", "Russia", "Canada"], correct: 2 },
+
+  { text: "Which gas do plants absorb?", options: ["Oxygen", "Carbon dioxide", "Nitrogen", "Hydrogen"], correct: 1 },
+  { text: "Who discovered gravity?", options: ["Newton", "Einstein", "Galileo", "Tesla"], correct: 0 },
+  { text: "The sun rises in the?", options: ["West", "East", "North", "South"], correct: 1 },
+  { text: "Which organ pumps blood?", options: ["Liver", "Brain", "Heart", "Lungs"], correct: 2 },
+  { text: "Water boils at?", options: ["90°C", "100°C", "80°C", "120°C"], correct: 1 },
+
+  { text: "Who wrote 'Things Fall Apart'?", options: ["Wole Soyinka", "Chinua Achebe", "Ngugi wa Thiong'o", "Chimamanda Adichie"], correct: 1 },
+  { text: "Which country hosted the first Olympics?", options: ["USA", "Greece", "China", "UK"], correct: 1 },
+  { text: "Which is the smallest continent?", options: ["Europe", "Australia", "Antarctica", "South America"], correct: 1 },
+  { text: "Which language is most spoken worldwide?", options: ["English", "Spanish", "Mandarin", "French"], correct: 2 },
+  { text: "Which animal is known as King of the Jungle?", options: ["Tiger", "Lion", "Elephant", "Leopard"], correct: 1 },
+
+  { text: "Nigeria became a republic in?", options: ["1960", "1963", "1979", "1999"], correct: 1 },
+  { text: "Which river is the longest in Africa?", options: ["Niger", "Nile", "Congo", "Zambezi"], correct: 1 },
+  { text: "Which country is called Land of the Rising Sun?", options: ["China", "Japan", "Korea", "Thailand"], correct: 1 },
+  { text: "Which metal is liquid at room temperature?", options: ["Iron", "Mercury", "Gold", "Silver"], correct: 1 },
+  { text: "Which continent is Nigeria in?", options: ["Asia", "Africa", "Europe", "America"], correct: 1 },
+
+  { text: "Which instrument measures temperature?", options: ["Barometer", "Thermometer", "Hygrometer", "Speedometer"], correct: 1 },
+  { text: "Which is the fastest land animal?", options: ["Lion", "Tiger", "Cheetah", "Horse"], correct: 2 },
+  { text: "Which is the largest mammal?", options: ["Elephant", "Blue whale", "Giraffe", "Shark"], correct: 1 },
+  { text: "Which vitamin is from sunlight?", options: ["A", "B", "C", "D"], correct: 3 },
+  { text: "Which gas is essential for breathing?", options: ["Oxygen", "Nitrogen", "Carbon dioxide", "Helium"], correct: 0 },
+
+  { text: "Which country is famous for pyramids?", options: ["Sudan", "Egypt", "Mexico", "India"], correct: 1 },
+  { text: "Which planet is closest to the sun?", options: ["Venus", "Earth", "Mercury", "Mars"], correct: 2 },
+  { text: "Which part of the plant makes food?", options: ["Root", "Stem", "Leaf", "Flower"], correct: 2 },
+  { text: "Who invented the telephone?", options: ["Edison", "Bell", "Tesla", "Newton"], correct: 1 },
+  { text: "Which is the largest ocean?", options: ["Atlantic", "Indian", "Pacific", "Arctic"], correct: 2 },
+
+  { text: "Which country is the USA capital?", options: ["New York", "Washington DC", "Los Angeles", "Chicago"], correct: 1 },
+  { text: "Which bird can mimic speech?", options: ["Eagle", "Parrot", "Sparrow", "Crow"], correct: 1 },
+  { text: "Which fuel is used in cars?", options: ["Coal", "Petrol", "Wood", "Gas"], correct: 1 },
+  { text: "Which shape has 3 sides?", options: ["Square", "Triangle", "Circle", "Rectangle"], correct: 1 },
+  { text: "Which day comes after Friday?", options: ["Sunday", "Monday", "Saturday", "Thursday"], correct: 2 }
+],
+civic: [
+  { text: "Citizenship duty includes:", options: ["Paying tax", "Violating law", "Evading jury", "None"], correct: 0 },
+  { text: "Rule of law means?", options: ["Nobody above law", "Leaders are exempt", "Military rule", "No courts"], correct: 0 },
+  { text: "Which is a fundamental human right?", options: ["Right to life", "Right to bribe", "Right to steal", "Right to hate"], correct: 0 },
+  { text: "Community policing emphasizes:", options: ["Police-community partnership", "Military patrols", "Curfews", "Mass arrest"], correct: 0 },
+  { text: "The Nigerian Police Force motto is?", options: ["Police is your friend", "Service and Security", "Justice for all", "Fear God, Serve Nation"], correct: 0 },
+
+  { text: "Democracy means?", options: ["Rule by people", "Rule by king", "Military rule", "Dictatorship"], correct: 0 },
+  { text: "Voting age in Nigeria?", options: ["16", "18", "21", "25"], correct: 1 },
+  { text: "Human rights are?", options: ["Privileges", "Basic freedoms", "Luxury", "Punishment"], correct: 1 },
+  { text: "Law making body?", options: ["Executive", "Judiciary", "Legislature", "Police"], correct: 2 },
+  { text: "Head of state?", options: ["President", "Governor", "Mayor", "Judge"], correct: 0 },
+
+  { text: "Civic responsibility includes?", options: ["Tax payment", "Law breaking", "Bribery", "None"], correct: 0 },
+  { text: "Constitution is?", options: ["A rule book of a country", "A newspaper", "A law court", "A government office"], correct: 0 },
+  { text: "Citizenship can be acquired by?", options: ["Birth", "Marriage", "Naturalization", "All of the above"], correct: 3 },
+  { text: "One major function of government is?", options: ["Insecurity", "Welfare", "Chaos", "None"], correct: 1 },
+  { text: "Election is conducted by?", options: ["INEC", "EFCC", "NEMA", "FRSC"], correct: 0 },
+
+  { text: "Which is a civic offence?", options: ["Littering", "Voting", "Education", "Tax payment"], correct: 0 },
+  { text: "Human trafficking is?", options: ["Legal trade", "Crime", "Sport", "Business"], correct: 1 },
+  { text: "The court interprets?", options: ["Law", "Music", "Sports", "Religion"], correct: 0 },
+  { text: "The symbol of authority is?", options: ["Crown", "Flag", "Uniform", "All of the above"], correct: 3 },
+  { text: "Rights are protected by?", options: ["Police only", "Constitution", "Teachers", "Friends"], correct: 1 },
+
+  { text: "Duty of citizens includes?", options: ["Obey laws", "Break laws", "Avoid voting", "Ignore rules"], correct: 0 },
+  { text: "National identity includes?", options: ["Flag", "Anthem", "Coat of arms", "All of the above"], correct: 3 },
+  { text: "Tax is used for?", options: ["Development", "Waste", "Corruption only", "None"], correct: 0 },
+  { text: "The president leads the?", options: ["Judiciary", "Executive", "Legislature", "Army only"], correct: 1 },
+  { text: "Civil society helps in?", options: ["Good governance", "Crime", "War", "Chaos"], correct: 0 },
+
+  { text: "Good citizenship requires?", options: ["Responsibility", "Irresponsibility", "Crime", "Rebellion"], correct: 0 },
+  { text: "A voter must be?", options: ["Citizen", "Foreigner", "Child", "Visitor"], correct: 0 },
+  { text: "Democratic election is?", options: ["Free and fair", "Forced", "Secret only", "Military controlled"], correct: 0 },
+  { text: "The flag of Nigeria has?", options: ["Green White Green", "Red Blue", "Black Yellow", "White Red"], correct: 0 },
+  { text: "Corruption is?", options: ["Honesty", "Dishonesty", "Lawfulness", "Service"], correct: 1 },
+
+  { text: "Human rights violation is?", options: ["Torture", "Freedom", "Voting", "Education"], correct: 0 },
+  { text: "Police role includes?", options: ["Law enforcement", "Entertainment", "Trade", "Politics only"], correct: 0 },
+  { text: "Citizenship education teaches?", options: ["Rights and duties", "War", "Sports", "Music"], correct: 0 },
+  { text: "National anthem promotes?", options: ["Unity", "Division", "Crime", "War"], correct: 0 },
+  { text: "Constitutional rights are?", options: ["Guaranteed", "Optional", "Illegal", "Temporary"], correct: 0 },
+
+  { text: "A good leader is?", options: ["Corrupt", "Honest", "Lazy", "Dishonest"], correct: 1 },
+  { text: "Voting system in Nigeria is?", options: ["Democratic", "Military", "Dictatorship", "None"], correct: 0 },
+  { text: "Civic education teaches?", options: ["Citizenship values", "Crime", "War", "Sports"], correct: 0 },
+  { text: "Equality means?", options: ["Fair treatment", "Favoritism", "Corruption", "Discrimination"], correct: 0 },
+  { text: "Justice means?", options: ["Fairness", "Bias", "Cheating", "Corruption"], correct: 0 },
+
+  { text: "National symbols include?", options: ["Flag", "Anthem", "Seal", "All of the above"], correct: 3 },
+  { text: "Voting is?", options: ["Right", "Crime", "Duty only", "Optional punishment"], correct: 0 },
+  { text: "Law breakers are punished by?", options: ["Court", "School", "Church", "Market"], correct: 0 },
+  { text: "Freedom of speech means?", options: ["Express opinions", "Silence", "Censorship", "Arrest"], correct: 0 },
+  { text: "Good governance ensures?", options: ["Development", "Poverty", "Chaos", "War"], correct: 0 }
+]
+};
     
     const TUTORIAL_CONTENT = {
         eng: { "Synonyms & Antonyms": "Synonyms are words with similar meanings, for example Happy and Joyful. Antonyms are opposites like Hot and Cold. Frequently tested in NPF CBT.", "Sentence Completion": "Use context clues to fill missing words. Practice conjunctions and prepositions.", "Correct Tenses": "Past, present, future consistency. For example, He went not He go.", "Grammar Errors": "Subject-verb agreement, double negatives, misplaced modifiers.", "Comprehension Passages": "Read carefully, identify main idea, inference questions." },
