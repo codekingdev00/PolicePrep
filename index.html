@@ -6,6 +6,7 @@
     <title>NPF CBT Prep | Tutorial, Quiz, Community, Answers & Scoreboard</title>
     <!-- Google Fonts + Tailwind CSS CDN + Font Awesome -->
     <link rel="manifest" href="/manifest.json">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -18,7 +19,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-    <script src="sw.js"></script>
     <style>
         * { font-family: 'Inter', sans-serif; }
         body { background: #f0f4f8; }
@@ -41,14 +41,6 @@
                 position: relative;
                 transform: translateX(0) !important;
             }
-        }
-        /* Voice recording animation */
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        .recording-pulse {
-            animation: pulse 1s infinite;
         }
         .quiz-answer-correct-badge {
             background: #e6f7e6;
@@ -136,6 +128,7 @@
         });
     };
     
+    // ------------------- DATA STRUCTURES ------------------
     // ------------------- DATA STRUCTURES ------------------
     const SUBJECTS = [
         { id: "eng", name: "English Language", icon: "fa-book-open", topics: ["Synonyms & Antonyms", "Sentence Completion", "Correct Tenses", "Grammar Errors", "Comprehension Passages"] },
@@ -374,7 +367,7 @@ civic: [
 ]
 };
     
-const TUTORIAL_CONTENT = {
+  const TUTORIAL_CONTENT = {
   eng: {
     "Synonyms & Antonyms":
       "Synonyms are words that have similar meanings and are used to enrich vocabulary and avoid repetition. For example, 'happy' and 'joyful', or 'big' and 'large'. Antonyms are words with opposite meanings such as 'hot' and 'cold', or 'strong' and 'weak'. In CBT exams like NPF, questions test your ability to recognize word relationships in context.",
@@ -468,17 +461,14 @@ const TUTORIAL_CONTENT = {
         
         useEffect(() => {
             if (selectedSubject && quizBank[selectedSubject]) {
-                // Reshuffle questions each time subject changes or quiz resets (randomization)
                 const freshShuffle = shuffleArray(quizBank[selectedSubject]);
                 setShuffledQuestions(freshShuffle);
-                // Reset answers when subject changes
                 setQuizAnswers({});
             } else {
                 setShuffledQuestions([]);
             }
         }, [selectedSubject, quizBank]);
         
-        // when resetQuiz triggers (from parent), re-shuffle
         const handleResetWithShuffle = () => {
             if (selectedSubject && quizBank[selectedSubject]) {
                 const newShuffle = shuffleArray(quizBank[selectedSubject]);
@@ -500,7 +490,6 @@ const TUTORIAL_CONTENT = {
         
         useEffect(() => {
             if (selectedAnswerSubject && quizBank[selectedAnswerSubject]) {
-                // randomize order for answer review
                 const shuffled = shuffleArray(quizBank[selectedAnswerSubject]);
                 setShuffledAnswerQuestions(shuffled);
             } else {
@@ -546,7 +535,9 @@ const TUTORIAL_CONTENT = {
         );
     };
     
-    // Enhanced CommunityPanel: shows online users list (improved) and existing forum features
+    // ==================== UPDATED COMMUNITY PANEL ====================
+    // Shows all registered users from database + online status indicator
+    // Removed voice note recording logic; clean reply functionality
     const CommunityPanel = ({ currentUser, currentUserData, db }) => {
         const [forumPosts, setForumPosts] = useState([]);
         const [newPostText, setNewPostText] = useState("");
@@ -554,10 +545,58 @@ const TUTORIAL_CONTENT = {
         const [imagePreview, setImagePreview] = useState("");
         const [editingPostId, setEditingPostId] = useState(null);
         const [editingText, setEditingText] = useState("");
-        const [onlineUsersList, setOnlineUsersList] = useState([]);
-        const [recordingPostId, setRecordingPostId] = useState(null);
-        const [mediaRecorder, setMediaRecorder] = useState(null);
+        const [allUsers, setAllUsers] = useState([]);        // Store all registered users
+        const [onlineUsersSet, setOnlineUsersSet] = useState(new Set()); // Set of online user IDs
         const [commentInputs, setCommentInputs] = useState({});
+        
+        // Load all users from database (registered users)
+        const loadAllUsers = async () => {
+            const usersSnapshot = await db.ref('users').once('value');
+            const usersList = [];
+            usersSnapshot.forEach(child => {
+                const userVal = child.val();
+                usersList.push({
+                    uid: child.key,
+                    fullname: userVal.fullname || "User",
+                    profilePic: userVal.profilePic || "",
+                    email: userVal.email || ""
+                });
+            });
+            setAllUsers(usersList);
+        };
+        
+        // Track online users (real-time)
+        useEffect(() => {
+            if (!currentUser) return;
+            const userStatusRef = db.ref(`status/${currentUser.uid}`);
+            const connectedRef = db.ref('.info/connected');
+            connectedRef.on('value', (snap) => {
+                if (snap.val() === true) {
+                    userStatusRef.onDisconnect().set({ state: 'offline', lastSeen: Date.now() });
+                    userStatusRef.set({ state: 'online', lastSeen: Date.now(), fullname: currentUserData.fullname, profilePic: currentUserData.profilePic });
+                }
+            });
+            const statusRef = db.ref('status');
+            const handleStatus = (snap) => {
+                const onlineIds = new Set();
+                snap.forEach(child => {
+                    const data = child.val();
+                    if (data.state === 'online') {
+                        onlineIds.add(child.key);
+                    }
+                });
+                setOnlineUsersSet(onlineIds);
+            };
+            statusRef.on('value', handleStatus);
+            
+            // Load all users once
+            loadAllUsers();
+            
+            return () => {
+                userStatusRef.set({ state: 'offline', lastSeen: Date.now() });
+                statusRef.off();
+            };
+        }, [currentUser, currentUserData]);
         
         const loadForum = async () => {
             const snapshot = await db.ref('forum/posts').once('value');
@@ -572,35 +611,6 @@ const TUTORIAL_CONTENT = {
             }));
             setForumPosts(postsWithComments);
         };
-        
-        // Track online users (improved visibility)
-        useEffect(() => {
-            if (!currentUser) return;
-            const userStatusRef = db.ref(`status/${currentUser.uid}`);
-            const connectedRef = db.ref('.info/connected');
-            connectedRef.on('value', (snap) => {
-                if (snap.val() === true) {
-                    userStatusRef.onDisconnect().set({ state: 'offline', lastSeen: Date.now() });
-                    userStatusRef.set({ state: 'online', lastSeen: Date.now(), fullname: currentUserData.fullname, profilePic: currentUserData.profilePic });
-                }
-            });
-            const statusRef = db.ref('status');
-            const handleStatus = (snap) => {
-                const users = [];
-                snap.forEach(child => {
-                    const data = child.val();
-                    if (data.state === 'online') {
-                        users.push({ uid: child.key, ...data });
-                    }
-                });
-                setOnlineUsersList(users);
-            };
-            statusRef.on('value', handleStatus);
-            return () => {
-                userStatusRef.set({ state: 'offline', lastSeen: Date.now() });
-                statusRef.off();
-            };
-        }, [currentUser, currentUserData]);
         
         useEffect(() => {
             loadForum();
@@ -661,40 +671,7 @@ const TUTORIAL_CONTENT = {
             setEditingText(post.text);
         };
         
-        const startVoiceRecording = async (postId) => {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                const recorder = new MediaRecorder(stream);
-                const chunks = [];
-                recorder.ondataavailable = (e) => chunks.push(e.data);
-                recorder.onstop = async () => {
-                    const audioBlob = new Blob(chunks, { type: 'audio/webm' });
-                    const audioBase64 = await new Promise((resolve) => {
-                        const reader = new FileReader();
-                        reader.onload = () => resolve(reader.result);
-                        reader.readAsDataURL(audioBlob);
-                    });
-                    await db.ref(`forum/comments/${postId}`).push({ 
-                        author: currentUserData.fullname, 
-                        authorPic: currentUserData.profilePic || "", 
-                        text: "🎤 Voice note", 
-                        audio: audioBase64,
-                        timestamp: Date.now() 
-                    });
-                    loadForum();
-                    stream.getTracks().forEach(track => track.stop());
-                    setRecordingPostId(null);
-                };
-                recorder.start();
-                setMediaRecorder(recorder);
-                setRecordingPostId(postId);
-            } catch(err) { alert("Microphone access denied"); }
-        };
-        
-        const stopVoiceRecording = () => {
-            if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
-        };
-        
+        // Simple text reply (no voice note)
         const handleComment = async (postId, commentText) => {
             if (!commentText.trim()) return;
             await db.ref(`forum/comments/${postId}`).push({ 
@@ -714,21 +691,36 @@ const TUTORIAL_CONTENT = {
                         <i className="fas fa-comments text-3xl text-green-600"></i>
                         <h2 className="text-2xl font-bold">Community Forum</h2>
                     </div>
-                    {/* Enhanced online users display */}
-                    <div className="flex items-center gap-2 bg-white rounded-full px-3 py-1 shadow">
+                    {/* Enhanced: Show all users + online indicator */}
+                    <div className="bg-white rounded-2xl shadow p-2 px-3 flex items-center gap-2">
+                        <i className="fas fa-users text-blue-500"></i>
+                        <span className="text-sm font-semibold">{allUsers.length} Members</span>
+                        <div className="w-px h-5 bg-gray-300 mx-1"></div>
                         <i className="fas fa-circle text-green-500 text-xs"></i>
-                        <span className="text-sm font-semibold">{onlineUsersList.length} Online</span>
-                        <div className="flex -space-x-2 ml-1">
-                            {onlineUsersList.slice(0, 4).map((user, idx) => (
-                                <div key={idx} className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs overflow-hidden border-2 border-white" title={user.fullname}>
-                                    {user.profilePic ? <img src={user.profilePic} className="w-full h-full object-cover"/> : <i className="fas fa-user text-[10px]"></i>}
-                                </div>
-                            ))}
-                            {onlineUsersList.length > 4 && <span className="text-xs text-gray-500 ml-1">+{onlineUsersList.length-4}</span>}
-                        </div>
+                        <span className="text-sm font-semibold">{onlineUsersSet.size} Online</span>
                     </div>
                 </div>
-                {/* Create post section */}
+                
+                {/* All registered users list with online status */}
+                <div className="bg-white rounded-xl shadow p-3 mb-5 overflow-x-auto">
+                    <h3 className="text-sm font-bold text-gray-600 mb-2 flex items-center gap-2"><i className="fas fa-address-book"></i> Community Members ({allUsers.length})</h3>
+                    <div className="flex flex-wrap gap-2">
+                        {allUsers.map(user => (
+                            <div key={user.uid} className="flex items-center gap-2 bg-gray-50 rounded-full px-3 py-1 text-sm shadow-sm">
+                                <div className="relative">
+                                    <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
+                                        {user.profilePic ? <img src={user.profilePic} className="w-full h-full object-cover"/> : <i className="fas fa-user text-xs text-blue-600"></i>}
+                                    </div>
+                                    <div className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border border-white ${onlineUsersSet.has(user.uid) ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+                                </div>
+                                <span className="text-xs font-medium max-w-[100px] truncate">{user.fullname}</span>
+                            </div>
+                        ))}
+                        {allUsers.length === 0 && <span className="text-xs text-gray-400">Loading members...</span>}
+                    </div>
+                </div>
+                
+                {/* Create Post Section */}
                 <div className="bg-white p-4 rounded-2xl shadow mb-4">
                     <textarea rows="2" className="w-full border rounded-xl p-3 text-sm" placeholder="Share a tip, ask a question..." value={newPostText} onChange={e=>setNewPostText(e.target.value)}></textarea>
                     {imagePreview && (<div className="relative inline-block mt-2"><img src={imagePreview} alt="Preview" className="w-20 h-20 rounded-lg object-cover"/><button onClick={() => { setNewPostImage(null); setImagePreview(""); }} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">×</button></div>)}
@@ -737,7 +729,8 @@ const TUTORIAL_CONTENT = {
                         <button onClick={handlePostMessage} className="bg-blue-700 text-white px-5 py-2 rounded-full text-sm"><i className="fas fa-paper-plane mr-1"></i>Post</button>
                     </div>
                 </div>
-                {/* Forum posts */}
+                
+                {/* Forum Posts with simple reply (no voice) */}
                 <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
                     {forumPosts.map(post => (
                         <div key={post.id} className="bg-white rounded-xl shadow p-4">
@@ -747,9 +740,25 @@ const TUTORIAL_CONTENT = {
                                     <div className="flex items-center justify-between flex-wrap gap-2"><div><span className="font-semibold text-sm">{post.author}</span><span className="text-xs text-gray-400 ml-2">{new Date(post.timestamp).toLocaleString()}</span></div>{post.authorId === currentUser?.uid && (<div className="flex gap-2"><button onClick={() => startEdit(post)} className="text-blue-500"><i className="fas fa-edit"></i></button><button onClick={() => handleDeletePost(post.id, post.authorId)} className="text-red-500"><i className="fas fa-trash"></i></button></div>)}</div>
                                     {editingPostId === post.id ? (<div><input type="text" value={editingText} onChange={e=>setEditingText(e.target.value)} className="w-full border rounded-lg p-2 text-sm"/><div className="flex gap-2 mt-2"><button onClick={() => handleEditPost(post.id)} className="bg-green-500 text-white px-3 py-1 rounded text-xs">Save</button><button onClick={() => setEditingPostId(null)} className="bg-gray-300 px-3 py-1 rounded text-xs">Cancel</button></div></div>) : (<p className="text-sm mt-1">{post.text}</p>)}
                                     {post.image && <img src={post.image} alt="Post" className="mt-2 rounded-lg max-h-48 object-cover"/>}
+                                    
+                                    {/* Comments section with simple reply (voice removed) */}
                                     <div className="ml-8 mt-3">
-                                        <div className="flex gap-2 flex-wrap"><input className="flex-1 border rounded-full px-3 py-1 text-xs" placeholder="Write a comment..." value={commentInputs[post.id]||''} onChange={e=>setCommentInputs({...commentInputs,[post.id]:e.target.value})}/><button onClick={()=>handleComment(post.id, commentInputs[post.id]||'')} className="bg-gray-200 px-3 rounded-full text-xs">Reply</button><button onClick={() => startVoiceRecording(post.id)} className={`px-3 rounded-full text-xs flex items-center gap-1 ${recordingPostId === post.id ? 'bg-red-500 text-white recording-pulse' : 'bg-gray-200'}`}><i className="fas fa-microphone"></i> {recordingPostId === post.id ? 'Recording...' : 'Voice'}</button>{recordingPostId === post.id && <button onClick={stopVoiceRecording} className="bg-green-500 text-white px-3 rounded-full text-xs">Stop</button>}</div>
-                                        {post.comments?.map(c => (<div key={c.id} className="bg-gray-50 rounded-lg p-2 mt-2 text-sm"><div className="flex items-center gap-2"><div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">{c.authorPic ? <img src={c.authorPic} className="w-full h-full object-cover"/> : <i className="fas fa-user-circle text-blue-500 text-xs"></i>}</div><span className="font-semibold text-xs">{c.author}</span><span className="text-xs text-gray-400">{new Date(c.timestamp).toLocaleString()}</span></div>{c.audio ? (<div className="mt-1 flex items-center gap-2"><i className="fas fa-headphones text-blue-500"></i><audio controls className="h-8 w-full max-w-[200px]"><source src={c.audio} type="audio/webm"/></audio></div>) : (<p className="ml-6 text-xs">{c.text}</p>)}</div>))}
+                                        <div className="flex gap-2">
+                                            <input className="flex-1 border rounded-full px-3 py-1 text-xs" placeholder="Write a reply..." value={commentInputs[post.id]||''} onChange={e=>setCommentInputs({...commentInputs,[post.id]:e.target.value})}/>
+                                            <button onClick={()=>handleComment(post.id, commentInputs[post.id]||'')} className="bg-blue-600 text-white px-4 rounded-full text-xs hover:bg-blue-700 transition">Reply</button>
+                                        </div>
+                                        {post.comments?.map(c => (
+                                            <div key={c.id} className="bg-gray-50 rounded-lg p-2 mt-2 text-sm">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
+                                                        {c.authorPic ? <img src={c.authorPic} className="w-full h-full object-cover"/> : <i className="fas fa-user-circle text-blue-500 text-xs"></i>}
+                                                    </div>
+                                                    <span className="font-semibold text-xs">{c.author}</span>
+                                                    <span className="text-xs text-gray-400">{new Date(c.timestamp).toLocaleString()}</span>
+                                                </div>
+                                                <p className="ml-6 text-xs">{c.text}</p>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
@@ -764,9 +773,8 @@ const TUTORIAL_CONTENT = {
     // ScoreboardPanel Component (unchanged layout)
     const ScoreboardPanel = ({ topScores }) => (<div><div className="flex items-center gap-3 mb-4"><i className="fas fa-trophy text-3xl text-yellow-500"></i><h2 className="text-2xl font-bold">Leaderboard</h2></div><div className="bg-white rounded-2xl shadow overflow-x-auto"><table className="w-full min-w-[500px]"><thead className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white"><tr><th className="p-3 text-left">Rank</th><th className="p-3 text-left">Name</th><th className="p-3 text-left">Subject</th><th className="p-3 text-left">Score</th></tr></thead><tbody>{topScores.length===0?<tr><td colSpan="4" className="text-center p-6 text-gray-500">No scores yet</td></tr>:topScores.map((s,idx)=><tr key={idx} className="border-b"><td className="p-3">{idx+1}</td><td className="p-3 font-semibold">{s.fullname}</td><td className="p-3 text-gray-600">{s.subject}</td><td className="p-3"><span className="bg-green-100 text-green-700 font-bold px-2 py-1 rounded-full text-sm">{s.score}%</span></td></tr>)}</tbody></table></div></div>);
     
-    // Main App component (integrate new QuizAnswers tab)
+    // Main App component (same as original)
     const App = () => {
-        // ... auth and state (preserve original)
         const [user, setUser] = useState(null);
         const [userData, setUserData] = useState({ fullname: "", email: "", gender: "", profilePic: "" });
         const [currentView, setCurrentView] = useState("landing");
@@ -898,6 +906,20 @@ const TUTORIAL_CONTENT = {
     };
     
     ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+<script>
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then(registration => {
+                    console.log('Service Worker registered successfully:', registration.scope);
+                })
+                .catch(error => {
+                    console.log('Service Worker registration failed:', error);
+                });
+        });
+    }
 </script>
 </body>
 </html>
