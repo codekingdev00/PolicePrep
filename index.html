@@ -872,19 +872,38 @@ civic: [
                                             {/* Comments Section with reply input */}
                                             <div className="mt-4 pl-2 border-l-2 border-gray-100">
                                                 {/* Reply input - clean flex */}
-                                                <div className="flex gap-2 items-center mb-3">
-                                                    <div className="w-7 h-7 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden flex-shrink-0">
-                                                        {currentUserData.profilePic ? <img src={currentUserData.profilePic} className="w-full h-full object-cover"/> : <i className="fas fa-user text-gray-500 text-xs"></i>}
-                                                    </div>
-                                                    <input 
-                                                        className="flex-1 border border-gray-200 rounded-full px-4 py-2 text-xs focus:ring-2 focus:ring-blue-400 focus:outline-none" 
-                                                        placeholder="Write a reply..." 
-                                                        value={commentInputs[post.id]||''} 
-                                                        onChange={e=>setCommentInputs({...commentInputs,[post.id]:e.target.value})}
-                                                        onKeyPress={e => e.key === 'Enter' && handleComment(post.id, commentInputs[post.id]||'')}
-                                                    />
-                                                    <button onClick={()=>handleComment(post.id, commentInputs[post.id]||'')} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-xs font-medium transition">Reply</button>
-                                                </div>
+                                               <div className="flex flex-col sm:flex-row gap-2 sm:items-center mb-3">
+    <div className="w-7 h-7 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden flex-shrink-0">
+        {currentUserData.profilePic
+            ? <img src={currentUserData.profilePic} className="w-full h-full object-cover" />
+            : <i className="fas fa-user text-gray-500 text-xs"></i>}
+    </div>
+
+    <input
+        className="flex-1 min-w-0 border border-gray-200 rounded-full px-4 py-2 text-xs focus:ring-2 focus:ring-blue-400 focus:outline-none"
+        placeholder="Write a reply..."
+        value={commentInputs[post.id] || ''}
+        onChange={e =>
+            setCommentInputs({
+                ...commentInputs,
+                [post.id]: e.target.value
+            })
+        }
+        onKeyDown={e =>
+            e.key === 'Enter' &&
+            handleComment(post.id, commentInputs[post.id] || '')
+        }
+    />
+
+    <button
+        onClick={() =>
+            handleComment(post.id, commentInputs[post.id] || '')
+        }
+        className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-xs font-medium transition"
+    >
+        Reply
+    </button>
+</div>
                                                 
                                                 {/* Comments list */}
                                                 {post.comments && post.comments.length > 0 && (
