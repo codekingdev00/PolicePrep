@@ -1,11 +1,11 @@
 const CACHE_NAME = "police-prep-cbt-v1";
-const OFFLINE_URL = "/index.html";
+const OFFLINE_URL = "/offline.html";
 
 // Core app shell (critical for CBT to load offline)
 const STATIC_ASSETS = [
   "/",
   "/index.html",
-  
+   "/offline.html",
   // Icons
   "/icon-192x192.png",
   "/icon-512x512.png",
