@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>NPF CBT Prep | Tutorial, Quiz, Community & Scoreboard</title>
+    <title>NPF CBT Prep | Tutorial, Quiz, Community, Answers & Scoreboard</title>
     <!-- Google Fonts + Tailwind CSS CDN + Font Awesome -->
-        <link rel="manifest" href="/manifest.json">
-    
+    <link rel="manifest" href="/manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -19,7 +18,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-    <script src="/sw.js"></script>
+    <script src="sw.js"></script>
     <style>
         * { font-family: 'Inter', sans-serif; }
         body { background: #f0f4f8; }
@@ -50,6 +49,15 @@
         }
         .recording-pulse {
             animation: pulse 1s infinite;
+        }
+        .quiz-answer-correct-badge {
+            background: #e6f7e6;
+            color: #2e7d32;
+            border-radius: 9999px;
+            padding: 2px 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
         }
     </style>
 </head>
@@ -135,7 +143,7 @@
         { id: "gk", name: "General Knowledge", icon: "fa-globe", topics: ["Nigeria Basic Facts", "National Symbols", "Leaders & Government", "Security Agencies", "History & Events"] },
         { id: "civic", name: "Civic & Security", icon: "fa-gavel", topics: ["Citizenship Duties", "Rule of Law", "Human Rights", "Community Policing"] }
     ];
-    
+       
   const QUIZ_BANK = {
  eng: [
   { text: "What is the synonym of 'BRAVE'?", options: ["Fearful", "Cowardly", "Courageous", "Weak"], correct: 2 },
@@ -366,12 +374,75 @@ civic: [
 ]
 };
     
-    const TUTORIAL_CONTENT = {
-        eng: { "Synonyms & Antonyms": "Synonyms are words with similar meanings, for example Happy and Joyful. Antonyms are opposites like Hot and Cold. Frequently tested in NPF CBT.", "Sentence Completion": "Use context clues to fill missing words. Practice conjunctions and prepositions.", "Correct Tenses": "Past, present, future consistency. For example, He went not He go.", "Grammar Errors": "Subject-verb agreement, double negatives, misplaced modifiers.", "Comprehension Passages": "Read carefully, identify main idea, inference questions." },
-        math: { "Fractions & Decimals": "Convert fractions to decimals: 1/2 equals 0.5. Add subtract with common denominator.", "Percentages": "Part divided by Whole times 100. Find percentage of quantity: 25 percent of 200 equals 50.", "Ratio & Proportion": "If 2 to 3 equals 4 to x, cross multiply gives 2x equals 12, so x equals 6.", "Simple Interest": "I equals P R T over 100. Example: 2000 Naira at 5 percent for 2 years equals 200 Naira.", "Basic Algebra": "Solve for x: 2x plus 3 equals 7, then x equals 2.", "Word Problems": "Translate statements into equations, identify unknowns." },
-        gk: { "Nigeria Basic Facts": "Capital is Abuja. 36 states. Naira currency.", "National Symbols": "Green White Green flag. Coat of arms: Unity and Faith. Anthem: Arise O Compatriots.", "Leaders & Government": "President is Commander in Chief. Three arms: Executive, Legislature, Judiciary.", "Security Agencies": "NPF, DSS, NIA, NSCDC, Military.", "History & Events": "Independence 1960. Civil War 1967 to 1970. Democracy Day June 12." },
-        civic: { "Citizenship Duties": "Obey laws, pay taxes, vote, defend nation.", "Rule of Law": "No one is above the law, equality before courts.", "Human Rights": "Right to life, dignity, fair hearing, freedom of speech.", "Community Policing": "Partnership between police and community to prevent crime." }
-    };
+const TUTORIAL_CONTENT = {
+  eng: {
+    "Synonyms & Antonyms":
+      "Synonyms are words that have similar meanings and are used to enrich vocabulary and avoid repetition. For example, 'happy' and 'joyful', or 'big' and 'large'. Antonyms are words with opposite meanings such as 'hot' and 'cold', or 'strong' and 'weak'. In CBT exams like NPF, questions test your ability to recognize word relationships in context.",
+
+    "Sentence Completion":
+      "Sentence completion tests your ability to understand meaning using context clues. You are expected to choose the most appropriate word that makes the sentence meaningful and grammatically correct. Focus on grammar structure, prepositions, conjunctions, and verb forms.",
+
+    "Correct Tenses":
+      "Tenses show the time of action: past, present, or future. For example, 'He went to school' is past tense, not 'He go'. Consistency in tense is important in both writing and CBT grammar questions.",
+
+    "Grammar Errors":
+      "Grammar error questions test your ability to detect mistakes in sentence structure. Common errors include subject-verb agreement, double negatives, wrong punctuation, and misplaced modifiers. Always read sentences carefully and match subjects with correct verb forms.",
+
+    "Comprehension Passages":
+      "Comprehension tests your reading and understanding skills. Read the passage carefully, identify the main idea, supporting details, and implied meanings (inference). Questions may test vocabulary, tone, or summary understanding."
+  },
+
+  math: {
+    "Fractions & Decimals":
+      "Fractions represent parts of a whole while decimals represent numbers in base 10 form. For example, 1/2 equals 0.5. To add or subtract fractions, use a common denominator before solving.",
+
+    "Percentages":
+      "Percent means 'per hundred'. To calculate percentage, use (part ÷ whole) × 100. For example, 25% of 200 equals (25/100) × 200 = 50. Percentages are commonly tested in exams.",
+
+    "Ratio & Proportion":
+      "Ratio compares two quantities, while proportion shows equality between two ratios. For example, if 2:3 = 4:x, then cross multiplying gives 2x = 12, so x = 6.",
+
+    "Simple Interest":
+      "Simple Interest (SI) is calculated using SI = (P × R × T) / 100, where P is principal, R is rate, and T is time. For example, 2000 at 5% for 2 years gives 200 Naira interest.",
+
+    "Basic Algebra":
+      "Algebra involves solving for unknown values. For example, 2x + 3 = 7, subtract 3 gives 2x = 4, then divide by 2 gives x = 2. Always isolate the variable step by step.",
+
+    "Word Problems":
+      "Word problems require translating written statements into mathematical expressions. Identify unknown values, assign variables, and form equations before solving."
+  },
+
+  gk: {
+    "Nigeria Basic Facts":
+      "Nigeria's capital city is Abuja. It has 36 states and 774 local government areas. The official currency is the Naira. Nigeria is the most populous country in Africa.",
+
+    "National Symbols":
+      "Nigeria’s flag is Green-White-Green, symbolizing agriculture and peace. The coat of arms represents unity and strength. The national anthem is 'Arise, O Compatriots'.",
+
+    "Leaders & Government":
+      "Nigeria operates a federal system with three arms: Executive (President), Legislature (Senate and House), and Judiciary (Courts). The President is the head of state and commander-in-chief.",
+
+    "Security Agencies":
+      "Key security agencies include the Nigeria Police Force (NPF), DSS (Department of State Services), NIA (National Intelligence Agency), NSCDC, and the Armed Forces.",
+
+    "History & Events":
+      "Nigeria gained independence on October 1, 1960. The civil war occurred between 1967 and 1970. Democracy Day is celebrated on June 12 in honor of democratic development."
+  },
+
+  civic: {
+    "Citizenship Duties":
+      "Citizenship duties include obeying laws, paying taxes, voting during elections, protecting public property, and defending the nation when required. Responsible citizens contribute to national development.",
+
+    "Rule of Law":
+      "The rule of law means that no individual, including leaders, is above the law. Everyone is equal before the law and subject to legal accountability in a fair justice system.",
+
+    "Human Rights":
+      "Human rights are fundamental freedoms every individual is entitled to. These include the right to life, dignity, freedom of speech, movement, and fair hearing in court.",
+
+    "Community Policing":
+      "Community policing is a security strategy where police and citizens work together to prevent crime, share information, and maintain peace in society. It improves trust and safety."
+  }
+};
     
     async function saveScoreToDB(userId, fullname, subject, scorePercent) {
         if (!userId) return;
@@ -381,47 +452,101 @@ civic: [
     
     const { useState, useEffect, useRef } = React;
     
-    // ==================== COMPONENT DEFINITIONS ====================
-    
-    // ProfileCard Component
-    const ProfileCard = ({ userData, setUserData, user, fileToBase64, compressBase64Image }) => {
-        const [uploading, setUploading] = useState(false);
-        const handlePicUpload = async (e) => {
-            const file = e.target.files[0];
-            if (file && user) {
-                if (file.size > 2 * 1024 * 1024) {
-                    alert("Image too large! Please select an image under 2MB");
-                    return;
-                }
-                setUploading(true);
-                try {
-                    let base64 = await fileToBase64(file);
-                    base64 = await compressBase64Image(base64, 150, 150);
-                    await db.ref(`users/${user.uid}`).update({ profilePic: base64 });
-                    setUserData({ ...userData, profilePic: base64 });
-                    alert("Profile picture updated!");
-                } catch(err) { alert("Upload failed: " + err.message); }
-                finally { setUploading(false); }
-            }
-        };
-        return (<div className="bg-white rounded-2xl p-6 shadow-lg"><div className="flex flex-col md:flex-row items-center gap-4 pb-4 border-b"><div className="relative"><div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white text-4xl overflow-hidden">{userData.profilePic ? (<img src={userData.profilePic} alt="Profile" className="w-full h-full object-cover"/>) : (<i className="fas fa-user-shield"></i>)}</div><label htmlFor="updateProfilePic" className="absolute bottom-0 right-0 bg-blue-600 text-white p-1 rounded-full cursor-pointer text-xs"><i className="fas fa-camera"></i></label><input type="file" id="updateProfilePic" accept="image/jpeg,image/png,image/jpg" onChange={handlePicUpload} className="hidden" disabled={uploading}/></div><div><h2 className="text-2xl font-bold">My Profile</h2><p className="text-gray-500 text-sm">{uploading ? "Uploading..." : "Click camera to change picture"}</p></div></div><div className="space-y-3 mt-4"><div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl"><i className="fas fa-user-circle text-blue-600 text-xl w-6"></i><div><p className="text-xs text-gray-500">Full Name</p><p className="font-semibold">{userData.fullname}</p></div></div><div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl"><i className="fas fa-envelope text-blue-600 text-xl w-6"></i><div><p className="text-xs text-gray-500">Email</p><p className="font-semibold">{userData.email}</p></div></div><div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl"><i className="fas fa-venus-mars text-blue-600 text-xl w-6"></i><div><p className="text-xs text-gray-500">Gender</p><p className="font-semibold">{userData.gender}</p></div></div></div><div className="mt-6 p-4 bg-blue-50 rounded-xl"><i className="fas fa-chalkboard-teacher text-blue-600 mr-2"></i> Keep practicing to top the scoreboard!</div></div>);
+    // Helper: shuffle array (Fisher-Yates) for question randomization
+    const shuffleArray = (array) => {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
     };
     
-    // QuizPanel Component
+    // Enhanced QuizPanel: question randomization + new "Quiz Answers" tab (showing correct answers)
     const QuizPanel = ({ selectedSubject, setSelectedSubject, quizAnswers, setQuizAnswers, quizSubmitted, quizResultMsg, handleQuizSubmit, resetQuiz, subjects, quizBank, userFirstName }) => {
-        const currentQuestions = selectedSubject ? quizBank[selectedSubject] : [];
+        const [shuffledQuestions, setShuffledQuestions] = useState([]);
+        
+        useEffect(() => {
+            if (selectedSubject && quizBank[selectedSubject]) {
+                // Reshuffle questions each time subject changes or quiz resets (randomization)
+                const freshShuffle = shuffleArray(quizBank[selectedSubject]);
+                setShuffledQuestions(freshShuffle);
+                // Reset answers when subject changes
+                setQuizAnswers({});
+            } else {
+                setShuffledQuestions([]);
+            }
+        }, [selectedSubject, quizBank]);
+        
+        // when resetQuiz triggers (from parent), re-shuffle
+        const handleResetWithShuffle = () => {
+            if (selectedSubject && quizBank[selectedSubject]) {
+                const newShuffle = shuffleArray(quizBank[selectedSubject]);
+                setShuffledQuestions(newShuffle);
+            }
+            resetQuiz();
+        };
+        
+        const currentQuestions = shuffledQuestions;
         return (<div><div className="flex items-center gap-3 mb-4"><i className="fas fa-pen-alt text-3xl text-orange-600"></i><h2 className="text-2xl font-bold">CBT Quiz</h2></div>
         {userFirstName && !quizSubmitted && !selectedSubject && (<div className="bg-blue-50 p-3 rounded-xl mb-4 text-blue-800 text-sm flex items-center gap-2"><i className="fas fa-bullhorn"></i> Hey {userFirstName}, challenge yourself! Pick a subject and test your knowledge.</div>)}
-        <div className="flex flex-wrap gap-2 mb-6">{subjects.map(s=><button key={s.id} onClick={()=>{setSelectedSubject(s.id); resetQuiz();}} className={`px-4 py-2 rounded-full text-sm md:text-base flex items-center gap-2 ${selectedSubject===s.id?'bg-blue-800 text-white':'bg-gray-200'}`}><i className={`fas ${s.icon}`}></i>{s.name}</button>)}</div>{selectedSubject?(<div className="bg-white p-4 md:p-6 rounded-2xl shadow">{!quizSubmitted?(<>{currentQuestions.map((q,idx)=>(<div key={idx} className="mb-4 pb-3 border-b"><p className="font-semibold">{idx+1}. {q.text}</p><div className="ml-2 mt-2 space-y-1">{q.options.map((opt,optIdx)=>(<label className="flex items-center gap-2 cursor-pointer"><input type="radio" name={`q${idx}`} value={optIdx} checked={quizAnswers[idx]==optIdx} onChange={()=>setQuizAnswers({...quizAnswers,[idx]:optIdx})}/><span className="text-sm">{opt}</span></label>))}</div></div>))}<button onClick={handleQuizSubmit} className="bg-orange-600 text-white px-6 py-2 rounded-full font-bold w-full md:w-auto">Submit Quiz</button></>):(<div className="text-center"><i className="fas fa-chart-line text-5xl text-green-500"></i><p className="text-xl font-bold my-3">{quizResultMsg}</p><button onClick={resetQuiz} className="bg-blue-700 text-white px-5 py-2 rounded-full">Retake Quiz</button></div>)}</div>):(<div className="bg-white p-8 text-center rounded-2xl shadow"><i className="fas fa-folder-open text-6xl text-gray-400"></i><p className="mt-2">Select a subject to begin</p></div>)}</div>);
+        <div className="flex flex-wrap gap-2 mb-6">{subjects.map(s=><button key={s.id} onClick={()=>{setSelectedSubject(s.id); handleResetWithShuffle();}} className={`px-4 py-2 rounded-full text-sm md:text-base flex items-center gap-2 ${selectedSubject===s.id?'bg-blue-800 text-white':'bg-gray-200'}`}><i className={`fas ${s.icon}`}></i>{s.name}</button>)}</div>{selectedSubject?(<div className="bg-white p-4 md:p-6 rounded-2xl shadow">{!quizSubmitted?(<>{currentQuestions.map((q,idx)=>(<div key={idx} className="mb-4 pb-3 border-b"><p className="font-semibold">{idx+1}. {q.text}</p><div className="ml-2 mt-2 space-y-1">{q.options.map((opt,optIdx)=>(<label className="flex items-center gap-2 cursor-pointer"><input type="radio" name={`q${idx}`} value={optIdx} checked={quizAnswers[idx]==optIdx} onChange={()=>setQuizAnswers({...quizAnswers,[idx]:optIdx})}/><span className="text-sm">{opt}</span></label>))}</div></div>))}<button onClick={handleQuizSubmit} className="bg-orange-600 text-white px-6 py-2 rounded-full font-bold w-full md:w-auto">Submit Quiz</button></>):(<div className="text-center"><i className="fas fa-chart-line text-5xl text-green-500"></i><p className="text-xl font-bold my-3">{quizResultMsg}</p><button onClick={handleResetWithShuffle} className="bg-blue-700 text-white px-5 py-2 rounded-full">Retake Quiz (Reshuffled)</button></div>)}</div>):(<div className="bg-white p-8 text-center rounded-2xl shadow"><i className="fas fa-folder-open text-6xl text-gray-400"></i><p className="mt-2">Select a subject to begin</p></div>)}</div>);
     };
     
-    // TutorialPanel Component
-    const TutorialPanel = ({ selectedTutorialSubject, setSelectedTutorialSubject, selectedTopic, setSelectedTopic, subjects, tutorialContent }) => {
-        const currentTopics = subjects.find(s=>s.id===selectedTutorialSubject)?.topics||[];
-        return (<div><div className="flex items-center gap-3 mb-4"><i className="fas fa-book-open text-3xl text-blue-600"></i><h2 className="text-2xl font-bold">Tutorials</h2></div><div className="flex flex-wrap gap-2 mb-4">{subjects.map(s=><button key={s.id} onClick={()=>{setSelectedTutorialSubject(s.id); setSelectedTopic(null);}} className={`px-3 py-1 rounded-full text-sm flex items-center gap-1 ${selectedTutorialSubject===s.id?'bg-blue-800 text-white':'bg-gray-200'}`}><i className={`fas ${s.icon}`}></i>{s.name}</button>)}</div><div className="flex flex-col lg:flex-row gap-4"><div className="lg:w-1/3 bg-white p-4 rounded-xl shadow"><h3 className="font-bold mb-2"><i className="fas fa-list-ul text-blue-600 mr-2"></i>Topics</h3><div className="space-y-1 max-h-64 overflow-y-auto">{currentTopics.map(t=><button key={t} onClick={()=>setSelectedTopic(t)} className={`block w-full text-left p-2 rounded-lg text-sm ${selectedTopic===t?'bg-blue-100 text-blue-800':'hover:bg-gray-100'}`}>{t}</button>)}</div></div><div className="lg:w-2/3 bg-white p-5 rounded-xl shadow"><h3 className="text-lg font-bold mb-2">{selectedTopic||"Lesson Preview"}</h3><p className="text-gray-700 text-sm">{selectedTopic?tutorialContent[selectedTutorialSubject]?.[selectedTopic]:"Select a topic to view lesson"}</p></div></div></div>);
+    // New Tab: Quiz Answers - shows correct answers per subject with question randomization (reshuffled view)
+    const QuizAnswersPanel = ({ subjects, quizBank }) => {
+        const [selectedAnswerSubject, setSelectedAnswerSubject] = useState(null);
+        const [shuffledAnswerQuestions, setShuffledAnswerQuestions] = useState([]);
+        
+        useEffect(() => {
+            if (selectedAnswerSubject && quizBank[selectedAnswerSubject]) {
+                // randomize order for answer review
+                const shuffled = shuffleArray(quizBank[selectedAnswerSubject]);
+                setShuffledAnswerQuestions(shuffled);
+            } else {
+                setShuffledAnswerQuestions([]);
+            }
+        }, [selectedAnswerSubject, quizBank]);
+        
+        return (
+            <div>
+                <div className="flex items-center gap-3 mb-4">
+                    <i className="fas fa-lightbulb text-3xl text-yellow-600"></i>
+                    <h2 className="text-2xl font-bold">Quiz Answers Bank</h2>
+                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full"><i className="fas fa-random mr-1"></i>Randomized order</span>
+                </div>
+                <div className="flex flex-wrap gap-2 mb-6">
+                    {subjects.map(s=>(
+                        <button key={s.id} onClick={()=>setSelectedAnswerSubject(s.id)} className={`px-4 py-2 rounded-full text-sm md:text-base flex items-center gap-2 ${selectedAnswerSubject===s.id?'bg-green-700 text-white':'bg-gray-200'}`}>
+                            <i className={`fas ${s.icon}`}></i>{s.name}
+                        </button>
+                    ))}
+                </div>
+                {selectedAnswerSubject ? (
+                    <div className="bg-white p-4 md:p-6 rounded-2xl shadow">
+                        <h3 className="font-bold text-lg mb-3 flex items-center gap-2"><i className="fas fa-check-circle text-green-600"></i> Correct Answers for {subjects.find(s=>s.id===selectedAnswerSubject)?.name}</h3>
+                        <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
+                            {shuffledAnswerQuestions.map((q, idx) => (
+                                <div key={idx} className="border-b pb-3">
+                                    <p className="font-semibold text-gray-800">{idx+1}. {q.text}</p>
+                                    <div className="mt-2 flex flex-wrap items-center gap-2">
+                                        <span className="quiz-answer-correct-badge"><i className="fas fa-check mr-1"></i>Correct:</span>
+                                        <span className="bg-green-50 text-green-800 px-3 py-1 rounded-full text-sm font-medium">{q.options[q.correct]}</span>
+                                    </div>
+                                    <div className="text-xs text-gray-400 mt-1">Other options: {q.options.filter((_,i)=> i !== q.correct).join(", ")}</div>
+                                </div>
+                            ))}
+                        </div>
+                        <p className="text-xs text-gray-400 mt-4 italic"><i className="fas fa-sync-alt"></i> Questions are reshuffled each time you open for better practice.</p>
+                    </div>
+                ) : (
+                    <div className="bg-white p-8 text-center rounded-2xl shadow"><i className="fas fa-question-circle text-6xl text-gray-400"></i><p className="mt-2">Select a subject to see all correct answers with random order</p></div>
+                )}
+            </div>
+        );
     };
     
-    // Enhanced CommunityPanel Component with image uploads, edit/delete, voice notes, and online users
+    // Enhanced CommunityPanel: shows online users list (improved) and existing forum features
     const CommunityPanel = ({ currentUser, currentUserData, db }) => {
         const [forumPosts, setForumPosts] = useState([]);
         const [newPostText, setNewPostText] = useState("");
@@ -429,10 +554,10 @@ civic: [
         const [imagePreview, setImagePreview] = useState("");
         const [editingPostId, setEditingPostId] = useState(null);
         const [editingText, setEditingText] = useState("");
-        const [onlineUsers, setOnlineUsers] = useState([]);
+        const [onlineUsersList, setOnlineUsersList] = useState([]);
         const [recordingPostId, setRecordingPostId] = useState(null);
         const [mediaRecorder, setMediaRecorder] = useState(null);
-        const [audioChunks, setAudioChunks] = useState([]);
+        const [commentInputs, setCommentInputs] = useState({});
         
         const loadForum = async () => {
             const snapshot = await db.ref('forum/posts').once('value');
@@ -448,22 +573,19 @@ civic: [
             setForumPosts(postsWithComments);
         };
         
-        // Track online users
+        // Track online users (improved visibility)
         useEffect(() => {
             if (!currentUser) return;
             const userStatusRef = db.ref(`status/${currentUser.uid}`);
-            const userRef = db.ref(`users/${currentUser.uid}`);
             const connectedRef = db.ref('.info/connected');
-            
             connectedRef.on('value', (snap) => {
                 if (snap.val() === true) {
                     userStatusRef.onDisconnect().set({ state: 'offline', lastSeen: Date.now() });
                     userStatusRef.set({ state: 'online', lastSeen: Date.now(), fullname: currentUserData.fullname, profilePic: currentUserData.profilePic });
                 }
             });
-            
             const statusRef = db.ref('status');
-            statusRef.on('value', (snap) => {
+            const handleStatus = (snap) => {
                 const users = [];
                 snap.forEach(child => {
                     const data = child.val();
@@ -471,9 +593,9 @@ civic: [
                         users.push({ uid: child.key, ...data });
                     }
                 });
-                setOnlineUsers(users);
-            });
-            
+                setOnlineUsersList(users);
+            };
+            statusRef.on('value', handleStatus);
             return () => {
                 userStatusRef.set({ state: 'offline', lastSeen: Date.now() });
                 statusRef.off();
@@ -487,10 +609,7 @@ civic: [
         const handleImageUpload = (e) => {
             const file = e.target.files[0];
             if (file && file.type.startsWith('image/')) {
-                if (file.size > 2 * 1024 * 1024) {
-                    alert("Image too large! Max 2MB");
-                    return;
-                }
+                if (file.size > 2 * 1024 * 1024) { alert("Image too large! Max 2MB"); return; }
                 setNewPostImage(file);
                 const reader = new FileReader();
                 reader.onload = () => setImagePreview(reader.result);
@@ -520,11 +639,8 @@ civic: [
         };
         
         const handleDeletePost = async (postId, authorId) => {
-            if (authorId !== currentUser.uid) {
-                alert("You can only delete your own posts");
-                return;
-            }
-            if (confirm("Are you sure you want to delete this post?")) {
+            if (authorId !== currentUser.uid) { alert("You can only delete your own posts"); return; }
+            if (confirm("Are you sure?")) {
                 await db.ref(`forum/posts/${postId}`).remove();
                 await db.ref(`forum/comments/${postId}`).remove();
                 loadForum();
@@ -540,10 +656,7 @@ civic: [
         };
         
         const startEdit = (post) => {
-            if (post.authorId !== currentUser.uid) {
-                alert("You can only edit your own posts");
-                return;
-            }
+            if (post.authorId !== currentUser.uid) { alert("You can only edit your own posts"); return; }
             setEditingPostId(post.id);
             setEditingText(post.text);
         };
@@ -575,31 +688,24 @@ civic: [
                 recorder.start();
                 setMediaRecorder(recorder);
                 setRecordingPostId(postId);
-                setAudioChunks(chunks);
-            } catch(err) {
-                alert("Microphone access denied or not available");
-            }
+            } catch(err) { alert("Microphone access denied"); }
         };
         
         const stopVoiceRecording = () => {
-            if (mediaRecorder && mediaRecorder.state === "recording") {
-                mediaRecorder.stop();
-            }
+            if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
         };
         
-        const handleComment = async (postId, commentText, audioBase64 = null) => {
-            if (!commentText.trim() && !audioBase64) return;
+        const handleComment = async (postId, commentText) => {
+            if (!commentText.trim()) return;
             await db.ref(`forum/comments/${postId}`).push({ 
                 author: currentUserData.fullname, 
                 authorPic: currentUserData.profilePic || "", 
-                text: commentText || "🎤 Voice message",
-                audio: audioBase64 || "",
+                text: commentText,
                 timestamp: Date.now() 
             });
             loadForum();
+            setCommentInputs({...commentInputs, [postId]: ""});
         };
-        
-        const [commentInputs, setCommentInputs] = useState({});
         
         return (
             <div>
@@ -608,104 +714,42 @@ civic: [
                         <i className="fas fa-comments text-3xl text-green-600"></i>
                         <h2 className="text-2xl font-bold">Community Forum</h2>
                     </div>
-                    {/* Online Users List */}
+                    {/* Enhanced online users display */}
                     <div className="flex items-center gap-2 bg-white rounded-full px-3 py-1 shadow">
                         <i className="fas fa-circle text-green-500 text-xs"></i>
-                        <span className="text-sm font-semibold">{onlineUsers.length} Online</span>
+                        <span className="text-sm font-semibold">{onlineUsersList.length} Online</span>
                         <div className="flex -space-x-2 ml-1">
-                            {onlineUsers.slice(0, 3).map((user, idx) => (
-                                <div key={idx} className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs overflow-hidden border-2 border-white">
+                            {onlineUsersList.slice(0, 4).map((user, idx) => (
+                                <div key={idx} className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs overflow-hidden border-2 border-white" title={user.fullname}>
                                     {user.profilePic ? <img src={user.profilePic} className="w-full h-full object-cover"/> : <i className="fas fa-user text-[10px]"></i>}
                                 </div>
                             ))}
-                            {onlineUsers.length > 3 && <span className="text-xs text-gray-500 ml-1">+{onlineUsers.length-3}</span>}
+                            {onlineUsersList.length > 4 && <span className="text-xs text-gray-500 ml-1">+{onlineUsersList.length-4}</span>}
                         </div>
                     </div>
                 </div>
-                
-                {/* Create Post Section */}
+                {/* Create post section */}
                 <div className="bg-white p-4 rounded-2xl shadow mb-4">
                     <textarea rows="2" className="w-full border rounded-xl p-3 text-sm" placeholder="Share a tip, ask a question..." value={newPostText} onChange={e=>setNewPostText(e.target.value)}></textarea>
-                    {imagePreview && (
-                        <div className="relative inline-block mt-2">
-                            <img src={imagePreview} alt="Preview" className="w-20 h-20 rounded-lg object-cover"/>
-                            <button onClick={() => { setNewPostImage(null); setImagePreview(""); }} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">×</button>
-                        </div>
-                    )}
+                    {imagePreview && (<div className="relative inline-block mt-2"><img src={imagePreview} alt="Preview" className="w-20 h-20 rounded-lg object-cover"/><button onClick={() => { setNewPostImage(null); setImagePreview(""); }} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">×</button></div>)}
                     <div className="flex gap-2 mt-3 flex-wrap">
-                        <label className="bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-lg text-sm cursor-pointer flex items-center gap-2">
-                            <i className="fas fa-image text-blue-500"></i> Add Image
-                            <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden"/>
-                        </label>
+                        <label className="bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-lg text-sm cursor-pointer flex items-center gap-2"><i className="fas fa-image text-blue-500"></i> Add Image<input type="file" accept="image/*" onChange={handleImageUpload} className="hidden"/></label>
                         <button onClick={handlePostMessage} className="bg-blue-700 text-white px-5 py-2 rounded-full text-sm"><i className="fas fa-paper-plane mr-1"></i>Post</button>
                     </div>
                 </div>
-                
-                {/* Forum Posts */}
+                {/* Forum posts */}
                 <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
                     {forumPosts.map(post => (
                         <div key={post.id} className="bg-white rounded-xl shadow p-4">
                             <div className="flex gap-3">
-                                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden flex-shrink-0">
-                                    {post.authorPic ? <img src={post.authorPic} className="w-full h-full object-cover"/> : <i className="fas fa-user-circle text-2xl text-blue-600"></i>}
-                                </div>
+                                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden flex-shrink-0">{post.authorPic ? <img src={post.authorPic} className="w-full h-full object-cover"/> : <i className="fas fa-user-circle text-2xl text-blue-600"></i>}</div>
                                 <div className="flex-1">
-                                    <div className="flex items-center justify-between flex-wrap gap-2">
-                                        <div>
-                                            <span className="font-semibold text-sm">{post.author}</span>
-                                            <span className="text-xs text-gray-400 ml-2">{new Date(post.timestamp).toLocaleString()}</span>
-                                        </div>
-                                        {post.authorId === currentUser?.uid && (
-                                            <div className="flex gap-2">
-                                                <button onClick={() => startEdit(post)} className="text-blue-500 hover:text-blue-700 text-xs"><i className="fas fa-edit"></i></button>
-                                                <button onClick={() => handleDeletePost(post.id, post.authorId)} className="text-red-500 hover:text-red-700 text-xs"><i className="fas fa-trash"></i></button>
-                                            </div>
-                                        )}
-                                    </div>
-                                    {editingPostId === post.id ? (
-                                        <div className="mt-2">
-                                            <input type="text" value={editingText} onChange={e=>setEditingText(e.target.value)} className="w-full border rounded-lg p-2 text-sm"/>
-                                            <div className="flex gap-2 mt-2">
-                                                <button onClick={() => handleEditPost(post.id)} className="bg-green-500 text-white px-3 py-1 rounded text-xs">Save</button>
-                                                <button onClick={() => setEditingPostId(null)} className="bg-gray-300 px-3 py-1 rounded text-xs">Cancel</button>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <p className="text-sm mt-1">{post.text}</p>
-                                    )}
+                                    <div className="flex items-center justify-between flex-wrap gap-2"><div><span className="font-semibold text-sm">{post.author}</span><span className="text-xs text-gray-400 ml-2">{new Date(post.timestamp).toLocaleString()}</span></div>{post.authorId === currentUser?.uid && (<div className="flex gap-2"><button onClick={() => startEdit(post)} className="text-blue-500"><i className="fas fa-edit"></i></button><button onClick={() => handleDeletePost(post.id, post.authorId)} className="text-red-500"><i className="fas fa-trash"></i></button></div>)}</div>
+                                    {editingPostId === post.id ? (<div><input type="text" value={editingText} onChange={e=>setEditingText(e.target.value)} className="w-full border rounded-lg p-2 text-sm"/><div className="flex gap-2 mt-2"><button onClick={() => handleEditPost(post.id)} className="bg-green-500 text-white px-3 py-1 rounded text-xs">Save</button><button onClick={() => setEditingPostId(null)} className="bg-gray-300 px-3 py-1 rounded text-xs">Cancel</button></div></div>) : (<p className="text-sm mt-1">{post.text}</p>)}
                                     {post.image && <img src={post.image} alt="Post" className="mt-2 rounded-lg max-h-48 object-cover"/>}
-                                    
-                                    {/* Comments Section */}
                                     <div className="ml-8 mt-3">
-                                        <div className="flex gap-2 flex-wrap">
-                                            <input className="flex-1 border rounded-full px-3 py-1 text-xs" placeholder="Write a comment..." value={commentInputs[post.id]||''} onChange={e=>setCommentInputs({...commentInputs,[post.id]:e.target.value})}/>
-                                            <button onClick={()=>{handleComment(post.id, commentInputs[post.id]||''); setCommentInputs({...commentInputs,[post.id]:''});}} className="bg-gray-200 px-3 rounded-full text-xs">Reply</button>
-                                            <button onClick={() => startVoiceRecording(post.id)} className={`px-3 rounded-full text-xs flex items-center gap-1 ${recordingPostId === post.id ? 'bg-red-500 text-white recording-pulse' : 'bg-gray-200'}`}>
-                                                <i className="fas fa-microphone"></i> {recordingPostId === post.id ? 'Recording...' : 'Voice'}
-                                            </button>
-                                            {recordingPostId === post.id && <button onClick={stopVoiceRecording} className="bg-green-500 text-white px-3 rounded-full text-xs">Stop</button>}
-                                        </div>
-                                        {post.comments?.map(c => (
-                                            <div key={c.id} className="bg-gray-50 rounded-lg p-2 mt-2 text-sm">
-                                                <div className="flex items-center gap-2">
-                                                    <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
-                                                        {c.authorPic ? <img src={c.authorPic} className="w-full h-full object-cover"/> : <i className="fas fa-user-circle text-blue-500 text-xs"></i>}
-                                                    </div>
-                                                    <span className="font-semibold text-xs">{c.author}</span>
-                                                    <span className="text-xs text-gray-400">{new Date(c.timestamp).toLocaleString()}</span>
-                                                </div>
-                                                {c.audio ? (
-                                                    <div className="mt-1 flex items-center gap-2">
-                                                        <i className="fas fa-headphones text-blue-500"></i>
-                                                        <audio controls className="h-8 w-full max-w-[200px]">
-                                                            <source src={c.audio} type="audio/webm"/>
-                                                        </audio>
-                                                    </div>
-                                                ) : (
-                                                    <p className="ml-6 text-xs">{c.text}</p>
-                                                )}
-                                            </div>
-                                        ))}
+                                        <div className="flex gap-2 flex-wrap"><input className="flex-1 border rounded-full px-3 py-1 text-xs" placeholder="Write a comment..." value={commentInputs[post.id]||''} onChange={e=>setCommentInputs({...commentInputs,[post.id]:e.target.value})}/><button onClick={()=>handleComment(post.id, commentInputs[post.id]||'')} className="bg-gray-200 px-3 rounded-full text-xs">Reply</button><button onClick={() => startVoiceRecording(post.id)} className={`px-3 rounded-full text-xs flex items-center gap-1 ${recordingPostId === post.id ? 'bg-red-500 text-white recording-pulse' : 'bg-gray-200'}`}><i className="fas fa-microphone"></i> {recordingPostId === post.id ? 'Recording...' : 'Voice'}</button>{recordingPostId === post.id && <button onClick={stopVoiceRecording} className="bg-green-500 text-white px-3 rounded-full text-xs">Stop</button>}</div>
+                                        {post.comments?.map(c => (<div key={c.id} className="bg-gray-50 rounded-lg p-2 mt-2 text-sm"><div className="flex items-center gap-2"><div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">{c.authorPic ? <img src={c.authorPic} className="w-full h-full object-cover"/> : <i className="fas fa-user-circle text-blue-500 text-xs"></i>}</div><span className="font-semibold text-xs">{c.author}</span><span className="text-xs text-gray-400">{new Date(c.timestamp).toLocaleString()}</span></div>{c.audio ? (<div className="mt-1 flex items-center gap-2"><i className="fas fa-headphones text-blue-500"></i><audio controls className="h-8 w-full max-w-[200px]"><source src={c.audio} type="audio/webm"/></audio></div>) : (<p className="ml-6 text-xs">{c.text}</p>)}</div>))}
                                     </div>
                                 </div>
                             </div>
@@ -717,85 +761,12 @@ civic: [
         );
     };
     
-    // ScoreboardPanel Component
+    // ScoreboardPanel Component (unchanged layout)
     const ScoreboardPanel = ({ topScores }) => (<div><div className="flex items-center gap-3 mb-4"><i className="fas fa-trophy text-3xl text-yellow-500"></i><h2 className="text-2xl font-bold">Leaderboard</h2></div><div className="bg-white rounded-2xl shadow overflow-x-auto"><table className="w-full min-w-[500px]"><thead className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white"><tr><th className="p-3 text-left">Rank</th><th className="p-3 text-left">Name</th><th className="p-3 text-left">Subject</th><th className="p-3 text-left">Score</th></tr></thead><tbody>{topScores.length===0?<tr><td colSpan="4" className="text-center p-6 text-gray-500">No scores yet</td></tr>:topScores.map((s,idx)=><tr key={idx} className="border-b"><td className="p-3">{idx+1}</td><td className="p-3 font-semibold">{s.fullname}</td><td className="p-3 text-gray-600">{s.subject}</td><td className="p-3"><span className="bg-green-100 text-green-700 font-bold px-2 py-1 rounded-full text-sm">{s.score}%</span></td></tr>)}</tbody></table></div></div>);
     
-    // Landing Component
-    const Landing = ({ onGetStarted }) => {
-        useEffect(() => {
-            speakText("Welcome to NPF CBT Prep. Your ultimate Police Force exam companion. Get started by logging in or creating an account.");
-        }, []);
-        return (
-            <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-cover bg-center"
-                style={{
-                    backgroundImage: "linear-gradient(to bottom right, rgba(30,58,138,0.5), rgba(67,56,202,0.9)), url('/police.jpeg')"
-                }}>
-                <div className="max-w-3xl text-center text-white greeting-animate">
-                    <div className="mb-2 flex justify-center"><img src="/logo.jpg" className="w-24 h-24 rounded-full" alt="NPF CBT Prep Logo"/></div>
-                    <h1 className="text-4xl md:text-5xl font-bold mb-2">Welcome to NPF CBT Prep </h1>
-                    <p className="text-xl md:text-2xl font-light mb-3">Your Ultimate Police Force Exam Companion</p>
-                    <div className="w-24 h-1 bg-orange-500 mx-auto my-4 rounded-full"></div>
-                    <p className="text-lg md:text-xl mb-8 px-2">Master the Nigerian Police Force recruitment test with past questions, tutorials, quizzes, and a thriving community.</p>
-                    <div className="flex gap-5 justify-center flex-wrap">
-                        <button onClick={() => onGetStarted("login")} className="bg-white text-blue-900 px-6 md:px-8 py-3 rounded-full font-bold shadow-lg hover:scale-105 transition flex items-center gap-2"><i className="fas fa-sign-in-alt"></i> Login</button>
-                        <button onClick={() => onGetStarted("register")} className="bg-orange-500 text-white px-6 md:px-8 py-3 rounded-full font-bold shadow-lg hover:scale-105 transition flex items-center gap-2"><i className="fas fa-user-plus"></i> Create Account</button>
-                    </div>
-                    <p className="mt-8 text-sm opacity-80">✨ Join thousands of aspirants already preparing ✨</p>
-                    <br/>
-                    <span className="text-white/80 text-sm bg-black px-4 py-2 rounded-full">Power by codekingdev | NPF CBT Prep</span>
-                </div>
-            </div>
-        );
-    };
-    
-    // Login Component
-    const Login = ({ setCurrentView }) => {
-        const [email, setEmail] = useState(""); const [pwd, setPwd] = useState(""); const [showPassword, setShowPassword] = useState(false); const [loading, setLoading] = useState(false);
-        const handleLogin = async () => { if (!email || !pwd) { alert("Please enter both email and password"); return; } setLoading(true); try { await auth.signInWithEmailAndPassword(email, pwd); } catch(e) { alert(e.message); } finally { setLoading(false); } };
-        return (<div className="min-h-screen flex items-center justify-center p-4"><div className="bg-white p-6 md:p-8 rounded-2xl shadow-2xl w-full max-w-md" ><div className="text-center mb-6"><i className="fas fa-shield-alt text-5xl text-blue-600 mb-3"></i><h2 className="text-2xl md:text-3xl font-bold text-gray-800">Welcome Back</h2><p className="text-gray-500 text-sm mt-2">Login to continue your NPF CBT preparation</p></div><div className="relative mb-4"><i className="fas fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i><input className="w-full p-3 pl-10 border rounded-xl focus:ring-2 focus:ring-blue-500" type="email" placeholder="Email Address" value={email} onChange={e=>setEmail(e.target.value)} onKeyPress={e=>e.key==='Enter'&&handleLogin()}/></div><div className="relative mb-6"><i className="fas fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i><input className="w-full p-3 pl-10 pr-12 border rounded-xl focus:ring-2 focus:ring-blue-500" type={showPassword?"text":"password"} placeholder="Password" value={pwd} onChange={e=>setPwd(e.target.value)} onKeyPress={e=>e.key==='Enter'&&handleLogin()}/><i className={`fa-solid ${showPassword?"fa-eye-slash":"fa-eye"} absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400`} onClick={()=>setShowPassword(!showPassword)}></i></div><button onClick={handleLogin} disabled={loading} className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 disabled:opacity-50">{loading?<><i className="fas fa-spinner fa-spin"></i><span>Logging in...</span></>:<><i className="fas fa-sign-in-alt"></i><span>Login</span></>}</button><div className="flex items-center my-6"><div className="flex-1 border-t border-gray-300"></div><span className="px-4 text-gray-500 text-sm">or</span><div className="flex-1 border-t border-gray-300"></div></div><p className="text-center text-gray-600">Don't have an account? <button onClick={()=>setCurrentView("register")} className="text-blue-600 font-semibold"><i className="fas fa-user-plus mr-1"></i>Sign up now</button></p><button onClick={()=>setCurrentView("landing")} className="mt-4 text-gray-500 underline flex items-center justify-center gap-1 w-full"><i className="fas fa-arrow-left"></i><span>Back to Home</span></button></div></div>);
-    };
-    
-    // Register Component
-    const Register = ({ setCurrentView }) => {
-        const [fullname, setFullname] = useState(""); const [email, setEmail] = useState(""); const [pwd, setPwd] = useState(""); const [confirmPwd, setConfirmPwd] = useState(""); const [gender, setGender] = useState("Male"); const [showPassword, setShowPassword] = useState(false); const [showConfirmPassword, setShowConfirmPassword] = useState(false); const [loading, setLoading] = useState(false); const [agreeTerms, setAgreeTerms] = useState(false);
-        const [profilePicBase64, setProfilePicBase64] = useState(""); const [profilePicPreview, setProfilePicPreview] = useState("");
-        
-        const handleProfilePicChange = async (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                if (file.size > 2 * 1024 * 1024) { alert("Image too large! Please select an image under 2MB"); return; }
-                try { let base64 = await fileToBase64(file); base64 = await compressBase64Image(base64, 150, 150); setProfilePicBase64(base64); setProfilePicPreview(base64); } catch(err) { alert("Error processing image"); }
-            }
-        };
-        
-        const handleRegister = async () => {
-            if (!fullname||!email||!pwd||!confirmPwd) { alert("Please fill in all fields"); return; }
-            if (pwd !== confirmPwd) { alert("Passwords do not match!"); return; }
-            if (pwd.length < 6) { alert("Password must be at least 6 characters long"); return; }
-            if (!agreeTerms) { alert("Please agree to the terms and conditions"); return; }
-            setLoading(true);
-            try {
-                const cred = await auth.createUserWithEmailAndPassword(email, pwd);
-                await db.ref(`users/${cred.user.uid}`).set({ fullname, email, gender, profilePic: profilePicBase64 || "", createdAt: Date.now() });
-            } catch(e) { alert(e.message); } finally { setLoading(false); }
-        };
-        
-        return (<div className="min-h-screen flex items-center justify-center p-4"><div className="bg-white p-6 md:p-8 rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto"><div className="text-center mb-6"><i className="fas fa-user-graduate text-5xl text-orange-600 mb-3"></i><h2 className="text-2xl md:text-3xl font-bold text-gray-800">Create Account</h2><p className="text-gray-500 text-sm">Join thousands preparing for NPF CBT exam</p></div>
-        <div className="flex flex-col items-center mb-4"><div className="relative"><div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden border-4 border-blue-500 shadow-lg">{profilePicPreview ? (<img src={profilePicPreview} alt="Preview" className="w-full h-full object-cover"/>) : (<i className="fas fa-camera text-3xl text-gray-400"></i>)}</div><label htmlFor="profilePicInput" className="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full cursor-pointer hover:bg-blue-700 transition"><i className="fas fa-upload text-xs"></i></label><input type="file" id="profilePicInput" accept="image/jpeg,image/png,image/jpg" onChange={handleProfilePicChange} className="hidden"/></div><p className="text-xs text-gray-500 mt-2">Upload profile picture (optional, max 2MB)</p></div>
-        <div className="relative mb-4"><i className="fas fa-user absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i><input className="w-full p-3 pl-10 border rounded-xl" placeholder="Full Name" value={fullname} onChange={e=>setFullname(e.target.value)}/></div>
-        <div className="relative mb-4"><i className="fas fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i><input className="w-full p-3 pl-10 border rounded-xl" type="email" placeholder="Email Address" value={email} onChange={e=>setEmail(e.target.value)}/></div>
-        <div className="relative mb-4"><i className="fas fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i><input className="w-full p-3 pl-10 pr-12 border rounded-xl" type={showPassword?"text":"password"} placeholder="Password (min. 6 characters)" value={pwd} onChange={e=>setPwd(e.target.value)}/><i className={`fa-solid ${showPassword?"fa-eye-slash":"fa-eye"} absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400`} onClick={()=>setShowPassword(!showPassword)}></i></div>
-        <div className="relative mb-4"><i className="fas fa-check-circle absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i><input className="w-full p-3 pl-10 pr-12 border rounded-xl" type={showConfirmPassword?"text":"password"} placeholder="Confirm Password" value={confirmPwd} onChange={e=>setConfirmPwd(e.target.value)}/><i className={`fa-solid ${showConfirmPassword?"fa-eye-slash":"fa-eye"} absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400`} onClick={()=>setShowConfirmPassword(!showConfirmPassword)}></i></div>
-        <div className="relative mb-4"><i className="fas fa-venus-mars absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10"></i><select className="w-full p-3 pl-10 border rounded-xl appearance-none bg-white" value={gender} onChange={e=>setGender(e.target.value)}><option>Male</option><option>Female</option><option>Other</option></select><i className="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i></div>
-        <div className="flex items-center gap-2 mb-6"><input type="checkbox" id="terms" checked={agreeTerms} onChange={e=>setAgreeTerms(e.target.checked)} className="w-4 h-4"/><label htmlFor="terms" className="text-sm text-gray-600">I agree to the <a href="#" className="text-orange-600">Terms</a> and <a href="#" className="text-orange-600">Privacy</a></label></div>
-        <button onClick={handleRegister} disabled={loading} className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 disabled:opacity-50">{loading?<><i className="fas fa-spinner fa-spin"></i><span>Creating...</span></>:<><i className="fas fa-user-plus"></i><span>Create Account</span></>}</button>
-        <div className="flex items-center my-6"><div className="flex-1 border-t border-gray-300"></div><span className="px-4 text-gray-500 text-sm">or</span><div className="flex-1 border-t border-gray-300"></div></div>
-        <p className="text-center text-gray-600">Already have an account? <button onClick={()=>setCurrentView("login")} className="text-orange-600 font-semibold"><i className="fas fa-sign-in-alt mr-1"></i>Login here</button></p>
-        <button onClick={()=>setCurrentView("landing")} className="mt-4 text-gray-500 underline flex items-center justify-center gap-1 w-full"><i className="fas fa-arrow-left"></i><span>Back to Home</span></button></div></div>);
-    };
-    
-    // ==================== MAIN APP COMPONENT ====================
+    // Main App component (integrate new QuizAnswers tab)
     const App = () => {
+        // ... auth and state (preserve original)
         const [user, setUser] = useState(null);
         const [userData, setUserData] = useState({ fullname: "", email: "", gender: "", profilePic: "" });
         const [currentView, setCurrentView] = useState("landing");
@@ -813,41 +784,24 @@ civic: [
         useEffect(() => {
             if (currentView === "dashboard" && userData.fullname && !greetingSpoken) {
                 const firstName = userData.fullname.split(' ')[0];
-                const timeGreeting = getTimeGreeting();
-                const message = `${timeGreeting} ${firstName}! Welcome to NPF CBT Prep. You can take a quiz, study tutorials, or join the community forum. Good luck with your preparation!`;
-                speakText(message);
+                const hour = new Date().getHours();
+                const timeGreeting = hour < 12 ? "Good morning" : (hour < 17 ? "Good afternoon" : "Good evening");
+                speakText(`${timeGreeting} ${firstName}! Welcome to NPF CBT Prep. You can take a quiz, study tutorials, or join the community forum. Good luck!`);
                 setGreetingSpoken(true);
             }
         }, [currentView, userData.fullname, greetingSpoken]);
-        
-        useEffect(() => {
-            const handleResize = () => {
-                if (window.innerWidth >= 1024) setSidebarOpen(false);
-            };
-            window.addEventListener('resize', handleResize);
-            return () => window.removeEventListener('resize', handleResize);
-        }, []);
         
         useEffect(() => {
             const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
                 if (firebaseUser) {
                     setUser(firebaseUser);
                     const snap = await db.ref(`users/${firebaseUser.uid}`).once('value');
-                    if (snap.exists()) {
-                        const data = snap.val();
-                        setUserData({ fullname: data.fullname || firebaseUser.email.split('@')[0], email: firebaseUser.email, gender: data.gender || "Not set", profilePic: data.profilePic || "" });
-                    } else {
-                        setUserData({ fullname: firebaseUser.email.split('@')[0], email: firebaseUser.email, gender: "Not set", profilePic: "" });
-                    }
+                    if (snap.exists()) { const data = snap.val(); setUserData({ fullname: data.fullname || firebaseUser.email.split('@')[0], email: firebaseUser.email, gender: data.gender || "Not set", profilePic: data.profilePic || "" }); }
+                    else { setUserData({ fullname: firebaseUser.email.split('@')[0], email: firebaseUser.email, gender: "Not set", profilePic: "" }); }
                     setCurrentView("dashboard");
                     setGreetingSpoken(false);
                     loadScoreboard();
-                } else {
-                    setUser(null);
-                    setCurrentView("landing");
-                    setUserData({ fullname: "", email: "", gender: "", profilePic: "" });
-                    setGreetingSpoken(false);
-                }
+                } else { setUser(null); setCurrentView("landing"); setUserData({ fullname: "", email: "", gender: "", profilePic: "" }); setGreetingSpoken(false); }
             });
             return () => unsubscribe();
         }, []);
@@ -855,12 +809,7 @@ civic: [
         const loadScoreboard = async () => {
             const snapshot = await db.ref('scores').once('value');
             const allScores = [];
-            snapshot.forEach(userScoreSnap => {
-                userScoreSnap.forEach(scoreItem => {
-                    const val = scoreItem.val();
-                    allScores.push({ fullname: val.fullname, score: val.score, subject: val.subject, timestamp: val.timestamp });
-                });
-            });
+            snapshot.forEach(userScoreSnap => { userScoreSnap.forEach(scoreItem => { const val = scoreItem.val(); allScores.push({ fullname: val.fullname, score: val.score, subject: val.subject, timestamp: val.timestamp }); }); });
             const sorted = allScores.sort((a,b) => b.score - a.score).slice(0, 20);
             setTopScores(sorted);
         };
@@ -869,9 +818,7 @@ civic: [
             if (!selectedSubject) return;
             const questions = QUIZ_BANK[selectedSubject];
             let correct = 0;
-            questions.forEach((q, idx) => {
-                if (quizAnswers[idx] !== undefined && parseInt(quizAnswers[idx]) === q.correct) correct++;
-            });
+            questions.forEach((q, idx) => { if (quizAnswers[idx] !== undefined && parseInt(quizAnswers[idx]) === q.correct) correct++; });
             const percent = Math.round((correct / questions.length) * 100);
             setQuizResultMsg(`You scored ${correct}/${questions.length} (${percent}%)`);
             setQuizSubmitted(true);
@@ -883,16 +830,10 @@ civic: [
         const resetQuiz = () => { setQuizAnswers({}); setQuizSubmitted(false); setQuizResultMsg(""); };
         const toggleSidebar = () => setSidebarOpen(prev => !prev);
         
-        const getTimeGreeting = () => {
-            const hour = new Date().getHours();
-            if (hour < 12) return "Good morning";
-            if (hour < 17) return "Good afternoon";
-            return "Good evening";
-        };
-        
         const tabsList = [
             { id: "profile", label: "My Dashboard", icon: "fa-chart-line" },
             { id: "quiz", label: "CBT Quiz", icon: "fa-pen-alt" },
+            { id: "answers", label: "Quiz Answers", icon: "fa-check-double" },
             { id: "tutorial", label: "Tutorials", icon: "fa-book" },
             { id: "community", label: "Community Forum", icon: "fa-comments" },
             { id: "scoreboard", label: "Scoreboard", icon: "fa-trophy" }
@@ -900,42 +841,60 @@ civic: [
         
         const renderDashboard = () => (
             <div className="lg:flex min-h-screen bg-gray-50">
-                <div className="lg:hidden fixed top-0 left-0 right-0 bg-white shadow-md z-30 px-4 py-3 flex items-center justify-between">
-                    <div className="flex items-center gap-2"><i className="fas fa-shield-alt text-blue-700 text-xl"></i><span className="font-bold text-gray-800">NPF CBT Prep</span></div>
-                    <button onClick={toggleSidebar} className="p-2 rounded-lg bg-gray-100"><i className={`fas ${sidebarOpen ? 'fa-times' : 'fa-bars'} text-xl text-gray-700`}></i></button>
-                </div>
+                <div className="lg:hidden fixed top-0 left-0 right-0 bg-white shadow-md z-30 px-4 py-3 flex items-center justify-between"><div className="flex items-center gap-2"><i className="fas fa-shield-alt text-blue-700 text-xl"></i><span className="font-bold text-gray-800">NPF CBT Prep</span></div><button onClick={toggleSidebar} className="p-2 rounded-lg bg-gray-100"><i className={`fas ${sidebarOpen ? 'fa-times' : 'fa-bars'} text-xl text-gray-700`}></i></button></div>
                 {sidebarOpen && <div className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" onClick={toggleSidebar}></div>}
                 <div className={`fixed lg:static top-0 left-0 h-full w-72 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
-                    <div className="p-5 pt-16 lg:pt-5 border-b flex items-center gap-3">
-                        {userData.profilePic ? <img src={userData.profilePic} className="w-12 h-12 rounded-full object-cover border-2 border-blue-500"/> : <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white"><i className="fas fa-user-shield text-xl"></i></div>}
-                        <div className="flex-1 min-w-0"><p className="font-bold truncate">{userData.fullname}</p><p className="text-sm text-gray-500 truncate">{userData.email}</p></div>
-                        <button onClick={toggleSidebar} className="lg:hidden text-gray-500"><i className="fas fa-times"></i></button>
-                    </div>
+                    <div className="p-5 pt-16 lg:pt-5 border-b flex items-center gap-3">{userData.profilePic ? <img src={userData.profilePic} className="w-12 h-12 rounded-full object-cover border-2 border-blue-500"/> : <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white"><i className="fas fa-user-shield text-xl"></i></div>}<div className="flex-1 min-w-0"><p className="font-bold truncate">{userData.fullname}</p><p className="text-sm text-gray-500 truncate">{userData.email}</p></div><button onClick={toggleSidebar} className="lg:hidden text-gray-500"><i className="fas fa-times"></i></button></div>
                     <nav className="flex-1 p-4 space-y-2 overflow-y-auto h-[calc(100vh-120px)]">
                         {tabsList.map(tab => (<button key={tab.id} onClick={() => { setActiveTab(tab.id); setSelectedSubject(null); setQuizSubmitted(false); setQuizResultMsg(""); setSelectedTopic(null); if (window.innerWidth < 1024) setSidebarOpen(false); }} className={`w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 transition-all duration-200 ${activeTab === tab.id ? 'bg-gradient-to-r from-blue-800 to-blue-900 text-white shadow-md' : 'hover:bg-gray-100 text-gray-700'}`}><i className={`fas ${tab.icon} w-5`}></i><span className="font-medium">{tab.label}</span></button>))}
                         <button onClick={() => auth.signOut()} className="w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 text-red-600 hover:bg-red-50 mt-4"><i className="fas fa-sign-out-alt w-5"></i><span>Logout</span></button>
                     </nav>
                 </div>
-                <div className="lg:ml-12 transition-all w-100 duration-300 min-h-screen">
-                    <div className="h-16 lg:hidden"></div>
-                    <div className="p-4 md:p-6 lg:p-8">
-                        <div className="max-w-7xl mx-auto">
-                            {activeTab === "profile" && (<><div className="mb-6 bg-gradient-to-r from-blue-700 to-indigo-800 rounded-2xl shadow-xl p-5 text-white greeting-animate"><div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3"><div><div className="flex items-center gap-2"><i className="fas fa-hand-peace text-3xl"></i><span className="text-sm uppercase tracking-wide opacity-80">{getTimeGreeting()}</span></div><h2 className="text-2xl md:text-3xl font-bold mt-1">Hello, {userData.fullname.split(' ')[0]}! 👋</h2><p className="text-blue-100 mt-1">Welcome to NPF CBT Prep — sharpen your skills and ace the exam.</p></div><button onClick={() => { setActiveTab("quiz"); setSelectedSubject(null); setQuizSubmitted(false); speakText(`Let's take a quiz ${userData.fullname.split(' ')[0]}! Choose a subject to begin.`); }} className="bg-orange-500 hover:bg-orange-600 transition-all px-5 py-2 rounded-full text-sm font-semibold shadow-lg flex items-center gap-2"><i className="fas fa-pen-alt"></i> Try Today's Quiz 🔥</button></div></div><ProfileCard userData={userData} setUserData={setUserData} user={user} fileToBase64={fileToBase64} compressBase64Image={compressBase64Image} /></>)}
-                            {activeTab === "quiz" && <QuizPanel selectedSubject={selectedSubject} setSelectedSubject={setSelectedSubject} quizAnswers={quizAnswers} setQuizAnswers={setQuizAnswers} quizSubmitted={quizSubmitted} quizResultMsg={quizResultMsg} handleQuizSubmit={handleQuizSubmit} resetQuiz={resetQuiz} subjects={SUBJECTS} quizBank={QUIZ_BANK} userFirstName={userData.fullname.split(' ')[0]} />}
-                            {activeTab === "tutorial" && <TutorialPanel selectedTutorialSubject={selectedTutorialSubject} setSelectedTutorialSubject={setSelectedTutorialSubject} selectedTopic={selectedTopic} setSelectedTopic={setSelectedTopic} subjects={SUBJECTS} tutorialContent={TUTORIAL_CONTENT} />}
-                            {activeTab === "community" && <CommunityPanel currentUser={user} currentUserData={userData} db={db} />}
-                            {activeTab === "scoreboard" && <ScoreboardPanel topScores={topScores} />}
-                        </div>
-                    </div>
-                </div>
-            </div>
+                <div className="lg:ml-12 transition-all w-100 duration-300 min-h-screen"><div className="h-16 lg:hidden"></div><div className="p-4 md:p-6 lg:p-8"><div className="max-w-7xl mx-auto">
+                    {activeTab === "profile" && (<><div className="mb-6 bg-gradient-to-r from-blue-700 to-indigo-800 rounded-2xl shadow-xl p-5 text-white greeting-animate"><div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3"><div><div className="flex items-center gap-2"><i className="fas fa-hand-peace text-3xl"></i><span className="text-sm uppercase tracking-wide opacity-80">{new Date().getHours()<12?"Good morning":(new Date().getHours()<17?"Good afternoon":"Good evening")}</span></div><h2 className="text-2xl md:text-3xl font-bold mt-1">Hello, {userData.fullname.split(' ')[0]}! 👋</h2><p className="text-blue-100 mt-1">Welcome to NPF CBT Prep — sharpen your skills and ace the exam.</p></div><button onClick={() => { setActiveTab("quiz"); setSelectedSubject(null); setQuizSubmitted(false); speakText(`Let's take a quiz ${userData.fullname.split(' ')[0]}! Choose a subject to begin.`); }} className="bg-orange-500 hover:bg-orange-600 transition-all px-5 py-2 rounded-full text-sm font-semibold shadow-lg flex items-center gap-2"><i className="fas fa-pen-alt"></i> Try Today's Quiz 🔥</button></div></div>
+                    <ProfileCard userData={userData} setUserData={setUserData} user={user} fileToBase64={fileToBase64} compressBase64Image={compressBase64Image} /></>)}
+                    {activeTab === "quiz" && <QuizPanel selectedSubject={selectedSubject} setSelectedSubject={setSelectedSubject} quizAnswers={quizAnswers} setQuizAnswers={setQuizAnswers} quizSubmitted={quizSubmitted} quizResultMsg={quizResultMsg} handleQuizSubmit={handleQuizSubmit} resetQuiz={resetQuiz} subjects={SUBJECTS} quizBank={QUIZ_BANK} userFirstName={userData.fullname.split(' ')[0]} />}
+                    {activeTab === "answers" && <QuizAnswersPanel subjects={SUBJECTS} quizBank={QUIZ_BANK} />}
+                    {activeTab === "tutorial" && <TutorialPanel selectedTutorialSubject={selectedTutorialSubject} setSelectedTutorialSubject={setSelectedTutorialSubject} selectedTopic={selectedTopic} setSelectedTopic={setSelectedTopic} subjects={SUBJECTS} tutorialContent={TUTORIAL_CONTENT} />}
+                    {activeTab === "community" && <CommunityPanel currentUser={user} currentUserData={userData} db={db} />}
+                    {activeTab === "scoreboard" && <ScoreboardPanel topScores={topScores} />}
+                </div></div></div></div>
         );
+        
+        const ProfileCard = ({ userData, setUserData, user, fileToBase64, compressBase64Image }) => {
+            const [uploading, setUploading] = useState(false);
+            const handlePicUpload = async (e) => { const file = e.target.files[0]; if (file && user) { if (file.size > 2*1024*1024) { alert("Image too large"); return; } setUploading(true); try { let base64 = await fileToBase64(file); base64 = await compressBase64Image(base64, 150, 150); await db.ref(`users/${user.uid}`).update({ profilePic: base64 }); setUserData({ ...userData, profilePic: base64 }); alert("Profile picture updated!"); } catch(err) { alert("Upload failed"); } finally { setUploading(false); } } };
+            return (<div className="bg-white rounded-2xl p-6 shadow-lg"><div className="flex flex-col md:flex-row items-center gap-4 pb-4 border-b"><div className="relative"><div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white text-4xl overflow-hidden">{userData.profilePic ? (<img src={userData.profilePic} alt="Profile" className="w-full h-full object-cover"/>) : (<i className="fas fa-user-shield"></i>)}</div><label htmlFor="updateProfilePic" className="absolute bottom-0 right-0 bg-blue-600 text-white p-1 rounded-full cursor-pointer text-xs"><i className="fas fa-camera"></i></label><input type="file" id="updateProfilePic" accept="image/jpeg,image/png,image/jpg" onChange={handlePicUpload} className="hidden" disabled={uploading}/></div><div><h2 className="text-2xl font-bold">My Profile</h2><p className="text-gray-500 text-sm">{uploading ? "Uploading..." : "Click camera to change picture"}</p></div></div><div className="space-y-3 mt-4"><div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl"><i className="fas fa-user-circle text-blue-600 text-xl w-6"></i><div><p className="text-xs text-gray-500">Full Name</p><p className="font-semibold">{userData.fullname}</p></div></div><div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl"><i className="fas fa-envelope text-blue-600 text-xl w-6"></i><div><p className="text-xs text-gray-500">Email</p><p className="font-semibold">{userData.email}</p></div></div><div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl"><i className="fas fa-venus-mars text-blue-600 text-xl w-6"></i><div><p className="text-xs text-gray-500">Gender</p><p className="font-semibold">{userData.gender}</p></div></div></div><div className="mt-6 p-4 bg-blue-50 rounded-xl"><i className="fas fa-chalkboard-teacher text-blue-600 mr-2"></i> Keep practicing to top the scoreboard!</div></div>);
+        };
+        
+        const TutorialPanel = ({ selectedTutorialSubject, setSelectedTutorialSubject, selectedTopic, setSelectedTopic, subjects, tutorialContent }) => {
+            const currentTopics = subjects.find(s=>s.id===selectedTutorialSubject)?.topics||[];
+            return (<div><div className="flex items-center gap-3 mb-4"><i className="fas fa-book-open text-3xl text-blue-600"></i><h2 className="text-2xl font-bold">Tutorials</h2></div><div className="flex flex-wrap gap-2 mb-4">{subjects.map(s=><button key={s.id} onClick={()=>{setSelectedTutorialSubject(s.id); setSelectedTopic(null);}} className={`px-3 py-1 rounded-full text-sm flex items-center gap-1 ${selectedTutorialSubject===s.id?'bg-blue-800 text-white':'bg-gray-200'}`}><i className={`fas ${s.icon}`}></i>{s.name}</button>)}</div><div className="flex flex-col lg:flex-row gap-4"><div className="lg:w-1/3 bg-white p-4 rounded-xl shadow"><h3 className="font-bold mb-2"><i className="fas fa-list-ul text-blue-600 mr-2"></i>Topics</h3><div className="space-y-1 max-h-64 overflow-y-auto">{currentTopics.map(t=><button key={t} onClick={()=>setSelectedTopic(t)} className={`block w-full text-left p-2 rounded-lg text-sm ${selectedTopic===t?'bg-blue-100 text-blue-800':'hover:bg-gray-100'}`}>{t}</button>)}</div></div><div className="lg:w-2/3 bg-white p-5 rounded-xl shadow"><h3 className="text-lg font-bold mb-2">{selectedTopic||"Lesson Preview"}</h3><p className="text-gray-700 text-sm">{selectedTopic?tutorialContent[selectedTutorialSubject]?.[selectedTopic]:"Select a topic to view lesson"}</p></div></div></div>);
+        };
         
         if (currentView === "landing") return <Landing onGetStarted={setCurrentView} />;
         if (currentView === "login") return <Login setCurrentView={setCurrentView} />;
         if (currentView === "register") return <Register setCurrentView={setCurrentView} />;
         if (currentView === "dashboard" && user) return renderDashboard();
         return <div className="flex items-center justify-center h-screen">Loading...</div>;
+    };
+    
+    const Landing = ({ onGetStarted }) => {
+        useEffect(() => { speakText("Welcome to NPF CBT Prep. Your ultimate Police Force exam companion. Get started by logging in or creating an account."); }, []);
+        return (<div className="min-h-screen flex flex-col items-center justify-center p-4 bg-cover bg-center" style={{ backgroundImage: "linear-gradient(to bottom right, rgba(30,58,138,0.5), rgba(67,56,202,0.9)), url('/police.jpeg')" }}><div className="max-w-3xl text-center text-white greeting-animate"><div className="mb-2 flex justify-center"><img src="/logo.jpg" className="w-24 h-24 rounded-full" alt="NPF CBT Prep Logo"/></div><h1 className="text-4xl md:text-5xl font-bold mb-2">Welcome to NPF CBT Prep </h1><p className="text-xl md:text-2xl font-light mb-3">Your Ultimate Police Force Exam Companion</p><div className="w-24 h-1 bg-orange-500 mx-auto my-4 rounded-full"></div><p className="text-lg md:text-xl mb-8 px-2">Master the Nigerian Police Force recruitment test with past questions, tutorials, quizzes, and a thriving community.</p><div className="flex gap-5 justify-center flex-wrap"><button onClick={() => onGetStarted("login")} className="bg-white text-blue-900 px-6 md:px-8 py-3 rounded-full font-bold shadow-lg hover:scale-105 transition flex items-center gap-2"><i className="fas fa-sign-in-alt"></i> Login</button><button onClick={() => onGetStarted("register")} className="bg-orange-500 text-white px-6 md:px-8 py-3 rounded-full font-bold shadow-lg hover:scale-105 transition flex items-center gap-2"><i className="fas fa-user-plus"></i> Create Account</button></div><p className="mt-8 text-sm opacity-80">✨ Join thousands of aspirants already preparing ✨</p><br/><span className="text-white/80 text-sm bg-black px-4 py-2 rounded-full">Power by codekingdev | NPF CBT Prep</span></div></div>);
+    };
+    
+    const Login = ({ setCurrentView }) => {
+        const [email, setEmail] = useState(""); const [pwd, setPwd] = useState(""); const [showPassword, setShowPassword] = useState(false); const [loading, setLoading] = useState(false);
+        const handleLogin = async () => { if (!email||!pwd) { alert("Please enter both email and password"); return; } setLoading(true); try { await auth.signInWithEmailAndPassword(email, pwd); } catch(e) { alert(e.message); } finally { setLoading(false); } };
+        return (<div className="min-h-screen flex items-center justify-center p-4"><div className="bg-white p-6 md:p-8 rounded-2xl shadow-2xl w-full max-w-md"><div className="text-center mb-6"><i className="fas fa-shield-alt text-5xl text-blue-600 mb-3"></i><h2 className="text-2xl md:text-3xl font-bold text-gray-800">Welcome Back</h2><p className="text-gray-500 text-sm mt-2">Login to continue your NPF CBT preparation</p></div><div className="relative mb-4"><i className="fas fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i><input className="w-full p-3 pl-10 border rounded-xl focus:ring-2 focus:ring-blue-500" type="email" placeholder="Email Address" value={email} onChange={e=>setEmail(e.target.value)} onKeyPress={e=>e.key==='Enter'&&handleLogin()}/></div><div className="relative mb-6"><i className="fas fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i><input className="w-full p-3 pl-10 pr-12 border rounded-xl focus:ring-2 focus:ring-blue-500" type={showPassword?"text":"password"} placeholder="Password" value={pwd} onChange={e=>setPwd(e.target.value)} onKeyPress={e=>e.key==='Enter'&&handleLogin()}/><i className={`fa-solid ${showPassword?"fa-eye-slash":"fa-eye"} absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400`} onClick={()=>setShowPassword(!showPassword)}></i></div><button onClick={handleLogin} disabled={loading} className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 disabled:opacity-50">{loading?<><i className="fas fa-spinner fa-spin"></i><span>Logging in...</span></>:<><i className="fas fa-sign-in-alt"></i><span>Login</span></>}</button><div className="flex items-center my-6"><div className="flex-1 border-t border-gray-300"></div><span className="px-4 text-gray-500 text-sm">or</span><div className="flex-1 border-t border-gray-300"></div></div><p className="text-center text-gray-600">Don't have an account? <button onClick={()=>setCurrentView("register")} className="text-blue-600 font-semibold"><i className="fas fa-user-plus mr-1"></i>Sign up now</button></p><button onClick={()=>setCurrentView("landing")} className="mt-4 text-gray-500 underline flex items-center justify-center gap-1 w-full"><i className="fas fa-arrow-left"></i><span>Back to Home</span></button></div></div>);
+    };
+    
+    const Register = ({ setCurrentView }) => {
+        const [fullname, setFullname] = useState(""); const [email, setEmail] = useState(""); const [pwd, setPwd] = useState(""); const [confirmPwd, setConfirmPwd] = useState(""); const [gender, setGender] = useState("Male"); const [showPassword, setShowPassword] = useState(false); const [showConfirmPassword, setShowConfirmPassword] = useState(false); const [loading, setLoading] = useState(false); const [agreeTerms, setAgreeTerms] = useState(false); const [profilePicPreview, setProfilePicPreview] = useState(""); const [profilePicBase64, setProfilePicBase64] = useState("");
+        const handleProfilePicChange = async (e) => { const file = e.target.files[0]; if (file) { if (file.size > 2 * 1024 * 1024) { alert("Image too large!"); return; } try { let base64 = await fileToBase64(file); base64 = await compressBase64Image(base64, 150, 150); setProfilePicBase64(base64); setProfilePicPreview(base64); } catch(err) { alert("Error processing image"); } } };
+        const handleRegister = async () => { if (!fullname||!email||!pwd||!confirmPwd) { alert("Fill all fields"); return; } if (pwd !== confirmPwd) { alert("Passwords do not match"); return; } if (pwd.length < 6) { alert("Password min 6 characters"); return; } if (!agreeTerms) { alert("Please agree to terms"); return; } setLoading(true); try { const cred = await auth.createUserWithEmailAndPassword(email, pwd); await db.ref(`users/${cred.user.uid}`).set({ fullname, email, gender, profilePic: profilePicBase64 || "", createdAt: Date.now() }); } catch(e) { alert(e.message); } finally { setLoading(false); } };
+        return (<div className="min-h-screen flex items-center justify-center p-4"><div className="bg-white p-6 md:p-8 rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto"><div className="text-center mb-6"><i className="fas fa-user-graduate text-5xl text-orange-600 mb-3"></i><h2 className="text-2xl md:text-3xl font-bold text-gray-800">Create Account</h2><p className="text-gray-500 text-sm">Join thousands preparing for NPF CBT exam</p></div><div className="flex flex-col items-center mb-4"><div className="relative"><div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden border-4 border-blue-500 shadow-lg">{profilePicPreview ? (<img src={profilePicPreview} alt="Preview" className="w-full h-full object-cover"/>) : (<i className="fas fa-camera text-3xl text-gray-400"></i>)}</div><label htmlFor="profilePicInput" className="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full cursor-pointer hover:bg-blue-700 transition"><i className="fas fa-upload text-xs"></i></label><input type="file" id="profilePicInput" accept="image/jpeg,image/png,image/jpg" onChange={handleProfilePicChange} className="hidden"/></div><p className="text-xs text-gray-500 mt-2">Upload profile picture (optional, max 2MB)</p></div><div className="relative mb-4"><i className="fas fa-user absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i><input className="w-full p-3 pl-10 border rounded-xl" placeholder="Full Name" value={fullname} onChange={e=>setFullname(e.target.value)}/></div><div className="relative mb-4"><i className="fas fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i><input className="w-full p-3 pl-10 border rounded-xl" type="email" placeholder="Email Address" value={email} onChange={e=>setEmail(e.target.value)}/></div><div className="relative mb-4"><i className="fas fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i><input className="w-full p-3 pl-10 pr-12 border rounded-xl" type={showPassword?"text":"password"} placeholder="Password (min. 6 characters)" value={pwd} onChange={e=>setPwd(e.target.value)}/><i className={`fa-solid ${showPassword?"fa-eye-slash":"fa-eye"} absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400`} onClick={()=>setShowPassword(!showPassword)}></i></div><div className="relative mb-4"><i className="fas fa-check-circle absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i><input className="w-full p-3 pl-10 pr-12 border rounded-xl" type={showConfirmPassword?"text":"password"} placeholder="Confirm Password" value={confirmPwd} onChange={e=>setConfirmPwd(e.target.value)}/><i className={`fa-solid ${showConfirmPassword?"fa-eye-slash":"fa-eye"} absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400`} onClick={()=>setShowConfirmPassword(!showConfirmPassword)}></i></div><div className="relative mb-4"><i className="fas fa-venus-mars absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10"></i><select className="w-full p-3 pl-10 border rounded-xl appearance-none bg-white" value={gender} onChange={e=>setGender(e.target.value)}><option>Male</option><option>Female</option><option>Other</option></select><i className="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i></div><div className="flex items-center gap-2 mb-6"><input type="checkbox" id="terms" checked={agreeTerms} onChange={e=>setAgreeTerms(e.target.checked)} className="w-4 h-4"/><label htmlFor="terms" className="text-sm text-gray-600">I agree to the <a href="#" className="text-orange-600">Terms</a> and <a href="#" className="text-orange-600">Privacy</a></label></div><button onClick={handleRegister} disabled={loading} className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 disabled:opacity-50">{loading?<><i className="fas fa-spinner fa-spin"></i><span>Creating...</span></>:<><i className="fas fa-user-plus"></i><span>Create Account</span></>}</button><div className="flex items-center my-6"><div className="flex-1 border-t border-gray-300"></div><span className="px-4 text-gray-500 text-sm">or</span><div className="flex-1 border-t border-gray-300"></div></div><p className="text-center text-gray-600">Already have an account? <button onClick={()=>setCurrentView("login")} className="text-orange-600 font-semibold"><i className="fas fa-sign-in-alt mr-1"></i>Login here</button></p><button onClick={()=>setCurrentView("landing")} className="mt-4 text-gray-500 underline flex items-center justify-center gap-1 w-full"><i className="fas fa-arrow-left"></i><span>Back to Home</span></button></div></div>);
     };
     
     ReactDOM.createRoot(document.getElementById("root")).render(<App />);
